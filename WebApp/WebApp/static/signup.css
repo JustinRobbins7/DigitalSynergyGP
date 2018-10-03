@@ -1,0 +1,12 @@
+body{
+	background-color: rgb(204, 255, 204)
+}
+
+.signup_entry{
+	width: 20%;
+	height: 30%;
+	margin-left: 45%;
+	margin-top: 11%;
+	background-color: white;
+	text-align: center;
+}
