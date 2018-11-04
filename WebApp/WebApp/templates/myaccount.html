@@ -79,10 +79,69 @@
 					<h1>Customer Login/Information Page</h1>
 				</div>
                 <br>
-                <div class="row align-items-center">
-                    <h2>Add Menu Item:</h2>
-                </div>
-			</div>
+                <p class="row align-items-center">
+                    <p>
+                        <h2>Create Account:</h2>
+                    </p>
+                    <div>
+                        {{ formCreate.hidden_tag() }}
+                        <p>
+                            {{ formCreate.username.label }}<br>
+                            {{ formCreate.username }}
+                        </p>
+                        <p>
+                            {{ formCreate.password.label }}<br>
+                            {{ formCreate.password }}
+                        </p>
+                        <p>
+                            {{ formCreate.passwordverify.label }}<br>
+                            {{ formCreate.passwordverify }}
+                        </p>
+                        <p>
+                            {{ formCreate.createaccount }}
+                        </p>
+                    </div>
+                <p class="row align-items-center">
+                    <p>
+                        <h2>User Login:</h2>
+                    </p>
+                    <div>
+                        {{ formLogin.hidden_tag() }}
+                        <p>
+                            {{ formLogin.username.label }}<br>
+                            {{ formLogin.username }}
+                        </p>
+                        <p>
+                            {{ formLogin.password.label }}<br>
+                            {{ formLogin.password }}
+                        </p>
+                        <p>
+                            {{ formLogin.loginsubmit }}
+                        </p>
+                    </div>
+                <p class="row align-items-center">
+                    <p>
+                        <h2>Add Menu Item:</h2>
+                    </p>
+                    <div>
+                        {{ formMenu.hidden_tag() }}
+                        <p>
+                            {{ formMenu.title.label }}<br>
+                            {{ formMenu.title }}
+                        </p>
+                        <p>
+                            {{ formMenu.description.label }}<br>
+                            {{ formMenu.description }}
+                        </p>
+                        <p>
+                            {{ formMenu.price.label }}<br>
+                            {{ formMenu.price }}
+                        </p>
+                        <p>
+                            {{ formMenu.addsubmit }}
+                        </p>
+                    </div>
+            </div>
 			</section>
             <!-- End Login/Customer area -->
 
