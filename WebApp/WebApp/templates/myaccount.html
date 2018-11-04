@@ -86,16 +86,13 @@
                     <div>
                         {{ formCreate.hidden_tag() }}
                         <p>
-                            {{ formCreate.username.label }}<br>
-                            {{ formCreate.username }}
+                            {{ formCreate.username(class_="single-input", placeholder="Username") }}
                         </p>
                         <p>
-                            {{ formCreate.password.label }}<br>
-                            {{ formCreate.password }}
+                            {{ formCreate.password(class_="single-input", placeholder="Password") }}
                         </p>
                         <p>
-                            {{ formCreate.passwordverify.label }}<br>
-                            {{ formCreate.passwordverify }}
+                            {{ formCreate.passwordverify(class_="single-input", placeholder="Verify Password")}}
                         </p>
                         <p>
                             {{ formCreate.createaccount(class_="genric-btn primary radius") }}
@@ -108,12 +105,10 @@
                     <div>
                         {{ formLogin.hidden_tag() }}
                         <p>
-                            {{ formLogin.username.label }}<br>
-                            {{ formLogin.username }}
+                            {{ formLogin.username(class_="single-input", placeholder="Username") }}
                         </p>
                         <p>
-                            {{ formLogin.password.label }}<br>
-                            {{ formLogin.password }}
+                            {{ formLogin.password(class_="single-input", placeholder="Password") }}
                         </p>
                         <p>
                             {{ formLogin.loginsubmit(class_="genric-btn primary radius") }}
@@ -126,16 +121,13 @@
                     <div>
                         {{ formMenu.hidden_tag() }}
                         <p>
-                            {{ formMenu.title.label }}<br>
-                            {{ formMenu.title }}
+                            {{ formMenu.title(class_="single-input", placeholder="Title") }}
                         </p>
                         <p>
-                            {{ formMenu.description.label }}<br>
-                            {{ formMenu.description }}
+                            {{ formMenu.description(class_="single-input", placeholder="Description") }}
                         </p>
                         <p>
-                            {{ formMenu.price.label }}<br>
-                            {{ formMenu.price }}
+                            {{ formMenu.price(class_="single-input", placeholder="Price")}}
                         </p>
                         <p>
                             {{ formMenu.addsubmit(class_="genric-btn primary radius") }}
