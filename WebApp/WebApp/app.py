@@ -6,12 +6,13 @@ app = Flask(__name__)
 
 
 # application will load html based on URL route given in the browser
-@app.route('/', defaults={'page': 'home.html'})
+@app.route('/', defaults={'page': 'home'})
 @app.route('/<page>')
 def html_lookup(page):
+    renderpage = page + '.html'
     print(page)
     try:
-        return render_template('{}'.format(page))
+        return render_template('{}'.format(renderpage))
     except TemplateNotFound:
         abort(404)
 
