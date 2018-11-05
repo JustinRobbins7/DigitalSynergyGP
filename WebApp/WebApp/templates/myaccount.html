@@ -1,4 +1,4 @@
-	<!DOCTYPE html>
+    <!DOCTYPE html>
 	<html lang="zxx" class="no-js">
 	<head>
 		<!-- Mobile Specific Meta -->
@@ -75,6 +75,7 @@
 			<!-- Start Login/Customer area -->
 			<section class="contact-page-area section-gap">
 			<div class="container">
+                <form action="" method="post" novalidate>
 				<div class="row align-items-center">
 					<h1>Customer Login/Information Page</h1>
 				</div>
@@ -84,18 +85,31 @@
                         <h2>Create Account:</h2>
                     </p>
                     <div>
+                        {{ formCreate.csrf_token }}
                         {{ formCreate.hidden_tag() }}
                         <p>
-                            {{ formCreate.username(class_="single-input", placeholder="Username") }}
-                        </p>
-                        <p>
-                            {{ formCreate.password(class_="single-input", placeholder="Password") }}
-                        </p>
-                        <p>
-                            {{ formCreate.passwordverify(class_="single-input", placeholder="Verify Password")}}
-                        </p>
-                        <p>
-                            {{ formCreate.createaccount(class_="genric-btn primary radius") }}
+                            <div class='mt-10'>
+                                {{ formCreate.createusername(class_="single-input", placeholder="Username") }}
+                            </div>
+                            {% for error in formCreate.createusername.errors %}
+                                 <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
+                            {% endfor %}
+                            <div class='mt-10'>
+                                {{ formCreate.createpassword(class_="single-input", placeholder="Password") }}
+                            </div>
+                            {% for error in formCreate.createpassword.errors %}
+                                <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
+                            {% endfor %}
+                            <div class='mt-10'>
+                                {{ formCreate.createpasswordverify(class_="single-input", placeholder="Verify Password")}}
+                            </div>
+                            {% for error in formCreate.createpasswordverify.errors %}
+                                 <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
+                            {% endfor %}
+                            <div class='mt-10'>
+                                {{ formCreate.createaccount(class_="genric-btn primary radius") }}
+                            </div>
+
                         </p>
                     </div>
                 <p class="row align-items-center">
@@ -103,15 +117,24 @@
                         <h2>User Login:</h2>
                     </p>
                     <div>
+                        {{ formLogin.csrf_token }}
                         {{ formLogin.hidden_tag() }}
                         <p>
-                            {{ formLogin.username(class_="single-input", placeholder="Username") }}
-                        </p>
-                        <p>
-                            {{ formLogin.password(class_="single-input", placeholder="Password") }}
-                        </p>
-                        <p>
-                            {{ formLogin.loginsubmit(class_="genric-btn primary radius") }}
+                            <div class='mt-10'>
+                                {{ formLogin.loginusername(class_="single-input", placeholder="Username") }}
+                            </div>
+                            {% for error in formLogin.loginusername.errors %}
+                                 <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
+                            {% endfor %}
+                            <div class='mt-10'>
+                                {{ formLogin.loginpassword(class_="single-input", placeholder="Password") }}
+                            </div>
+                            {% for error in formLogin.loginpassword.errors %}
+                                 <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
+                            {% endfor %}
+                            <div class="mt-10">
+                                {{ formLogin.loginsubmit(class_="genric-btn primary radius") }}
+                            </div>
                         </p>
                     </div>
                 <p class="row align-items-center">
@@ -119,20 +142,43 @@
                         <h2>Add Menu Item:</h2>
                     </p>
                     <div>
+                        {{ formMenu.csrf_token }}
                         {{ formMenu.hidden_tag() }}
                         <p>
-                            {{ formMenu.title(class_="single-input", placeholder="Title") }}
-                        </p>
-                        <p>
-                            {{ formMenu.description(class_="single-input", placeholder="Description") }}
-                        </p>
-                        <p>
-                            {{ formMenu.price(class_="single-input", placeholder="Price")}}
-                        </p>
-                        <p>
-                            {{ formMenu.addsubmit(class_="genric-btn primary radius") }}
+                            <div class='mt-10'>
+                                {{ formMenu.title(class_="single-input", placeholder="Title") }}
+                            </div>
+                            {% for error in formMenu.title.errors %}
+                                 <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
+                            {% endfor %}
+                            <div class='mt-10'>
+                                {{ formMenu.description(class_="single-input", placeholder="Description") }}
+                            </div>
+                            {% for error in formMenu.description.errors %}
+                                 <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
+                            {% endfor %}
+                            <div class="input-group-icon mt-10">
+                                <div class="icon"><i class="fa fa-usd" aria-hidden="true"></i></div>
+                                {{ formMenu.price(class_="single-input", placeholder="Price")}}
+                            </div>
+                            {% for error in formMenu.price.errors %}
+                                 <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
+                            {% endfor %}
+                            <div class="input-group-icon mt-10">
+                                <div class="icon"><i class="fa fa-cutlery" aria-hidden="true"></i></div>
+                                <div class="form-select" id="default-select">
+                                    {{ formMenu.choice }}
+                                </div>
+                            </div>
+                            {% for error in formMenu.choice.errors %}
+                                 <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
+                            {% endfor %}
+                            <div class='mt-10'>
+                                {{ formMenu.addsubmit(class_="genric-btn primary radius") }}
+                            </div>
                         </p>
                     </div>
+                </form>
             </div>
 			</section>
             <!-- End Login/Customer area -->
