@@ -1,12 +1,19 @@
-
-
 from flask import Flask, render_template, abort, redirect, request
 from jinja2 import TemplateNotFound
 from WebApp.WebApp.forms import AddMenuItem, CreateAccount, FormLogin
+from flaskext.mysql import MySQL
+
 app = Flask(__name__)
 
 # secret key to allow for CSRF forms
 app.config['SECRET_KEY'] = 'any secret string'
+
+mysql = MySQL()
+app.config['MYSQL_DATABASE_USER'] = 'root'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'DigitalSynergy'
+app.config['MYSQL_DATABASE_DB'] = 'EmpData'
+app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+mysql.init_app(app)
 
 
 # application will load html based on URL route given in the browser
@@ -36,6 +43,16 @@ def html_lookup(page):
                 if form_login.validate_on_submit():
                     print(form_login.loginusername.data)
                     print(form_login.loginpassword.data)
+
+                    cursor = mysql.connect().cursor()
+                    cursor.execute("SELECT * from User where Username='" + form_login.loginusername.data + "' and Password='" + form_login.loginpassword.data + "'")
+                    data = cursor.fetchone()
+                    if data is None:
+                        return "Username or Password is wrong"
+                    else:
+                        return "Logged in successfully"
+
+
                     return redirect('myaccount')
 
             if form_menu.addsubmit.data:
