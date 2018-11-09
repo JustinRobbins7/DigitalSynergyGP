@@ -77,36 +77,37 @@
 			<div class="container">
                 <form action="" method="post" novalidate>
                 {% if current_user.is_authenticated %}
-                     <p class="row align-items-center">
+                    {% if current_user.username == 'admin' %}
+                        <p class="row align-items-center">
                         <p>
                             <p class="row align-items-center">
-                    <p>
-                        <div class="text-capitalize"><h2>Welcome: {{ current_user.username }}</h2></div>
-                    </p>
-                    <p>
-                        <h2>Add Menu Item:</h2>
-                    </p>
-                    <div>
-                        {{ formMenu.csrf_token }}
-                        {{ formMenu.hidden_tag() }}
-                        <p>
-                            <div class='mt-10'>
-                                {{ formMenu.title(class_="single-input", placeholder="Title") }}
-                            </div>
-                            {% for error in formMenu.title.errors %}
-                                 <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
-                            {% endfor %}
-                            <div class='mt-10'>
-                                {{ formMenu.description(class_="single-input", placeholder="Description") }}
-                            </div>
-                            {% for error in formMenu.description.errors %}
-                                 <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
-                            {% endfor %}
-                            <div class="input-group-icon mt-10">
-                                <div class="icon"><i class="fa fa-usd" aria-hidden="true"></i></div>
-                                {{ formMenu.price(class_="single-input", placeholder="Price")}}
-                            </div>
-                            {% for error in formMenu.price.errors %}
+                            <p>
+                                <div class="text-capitalize"><h2>Welcome: {{ current_user.username }}</h2></div>
+                            </p>
+                            <p>
+                                <h2>Add Menu Item:</h2>
+                            </p>
+                            <div>
+                            {{ formMenu.csrf_token }}
+                            {{ formMenu.hidden_tag() }}
+                            <p>
+                                <div class='mt-10'>
+                                    {{ formMenu.title(class_="single-input", placeholder="Title") }}
+                                </div>
+                                {% for error in formMenu.title.errors %}
+                                    <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
+                                {% endfor %}
+                                <div class='mt-10'>
+                                    {{ formMenu.description(class_="single-input", placeholder="Description") }}
+                                </div>
+                                {% for error in formMenu.description.errors %}
+                                    <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
+                                {% endfor %}
+                                <div class="input-group-icon mt-10">
+                                    <div class="icon"><i class="fa fa-usd" aria-hidden="true"></i></div>
+                                        {{ formMenu.price(class_="single-input", placeholder="Price")}}
+                                    </div>
+                                {% for error in formMenu.price.errors %}
                                  <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
                             {% endfor %}
                             <div class="input-group-icon mt-10">
@@ -127,6 +128,18 @@
                             <a href="logout" class="genric-btn primary radius">Logout From Website</a>
                         </p>
                     </p>
+                    {% else %}
+                        <p class="row align-items-center">
+                        <p>
+                            <p class="row align-items-center">
+                            <p>
+                                <div class="text-capitalize"><h2>Welcome: {{ current_user.username }}</h2></div><br>
+                                <a href="logout" class="genric-btn primary radius">Logout From Website</a>
+                            </p>
+                        </p>
+                        </p>
+                        </p>
+                    {% endif %}
                 {% else %}
                 <br>
                 <p class="row align-items-center">
