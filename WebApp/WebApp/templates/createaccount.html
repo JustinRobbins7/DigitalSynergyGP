@@ -16,7 +16,7 @@
 		<!-- Site Title -->
 		<title>El Restaurante</title>
 
-		<link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet"> 
+		<link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet">
 			<!--
 			CSS
 			============================================= -->
@@ -30,7 +30,7 @@
 			<link rel="stylesheet" href="static/css/owl.carousel.css">
 			<link rel="stylesheet" href="static/css/main.css">
 		</head>
-		<body>	
+		<body>
 			<header id="header">
 				<div class="header-top">
 					<div class="container">
@@ -38,11 +38,11 @@
 						      <div id="logo">
 						        <a href="home"><img src="static/img/logo.png" alt="" title="" /></a>
 						      </div>
-				  		</div>			  					
+				  		</div>
 					</div>
 				</div>
 				<div class="container main-menu">
-					<div class="row align-items-center justify-content-center d-flex">			
+					<div class="row align-items-center justify-content-center d-flex">
 				      <nav id="nav-menu-container">
 				        <ul class="nav-menu">
 				          <li><a href="home">Home</a></li>
@@ -51,122 +51,71 @@
 				          <li><a href="gallery">Gallery</a></li>
 				          <li><a href="myaccount">My Account</a></li>
 				        </ul>
-				      </nav><!-- #nav-menu-container -->					      		  
+				      </nav><!-- #nav-menu-container -->
 					</div>
 				</div>
 			</header><!-- #header -->
-	  
+
 			<!-- start banner Area -->
-			<section class="relative about-banner">	
+			<section class="relative about-banner">
 				<div class="overlay overlay-bg"></div>
-				<div class="container">				
+				<div class="container">
 					<div class="row d-flex align-items-center justify-content-center">
 						<div class="about-content col-lg-12">
 							<h1 class="text-white">
-								My Account			
-							</h1>	
+								My Account
+							</h1>
 							<p class="text-white link-nav"><a href="home">Home </a>  <span class="lnr lnr-arrow-right"></span>  <a href="myaccount"> My Account</a></p>
-						</div>	
+						</div>
 					</div>
 				</div>
 			</section>
-			<!-- End banner Area -->				  
+			<!-- End banner Area -->
 
 			<!-- Start Login/Customer area -->
             <section class="contact-page-area section-gap">
 			<div class="container">
                 <form action="" method="post" novalidate>
-                {% if current_user.is_authenticated %}
-                     <p class="row align-items-center">
-                        <p>
-                            <p class="row align-items-center">
-                    <p>
-                        <div class="text-capitalize"><h2>Welcome: {{ current_user.username }}</h2></div>
-                    </p>
-                    <p>
-                        <h2>Add Menu Item:</h2>
-                    </p>
-                    <div>
-                        {{ formMenu.csrf_token }}
-                        {{ formMenu.hidden_tag() }}
-                        <p>
-                            <div class='mt-10'>
-                                {{ formMenu.title(class_="single-input", placeholder="Title") }}
-                            </div>
-                            {% for error in formMenu.title.errors %}
-                                 <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
-                            {% endfor %}
-                            <div class='mt-10'>
-                                {{ formMenu.description(class_="single-input", placeholder="Description") }}
-                            </div>
-                            {% for error in formMenu.description.errors %}
-                                 <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
-                            {% endfor %}
-                            <div class="input-group-icon mt-10">
-                                <div class="icon"><i class="fa fa-usd" aria-hidden="true"></i></div>
-                                {{ formMenu.price(class_="single-input", placeholder="Price")}}
-                            </div>
-                            {% for error in formMenu.price.errors %}
-                                 <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
-                            {% endfor %}
-                            <div class="input-group-icon mt-10">
-                                <div class="icon"><i class="fa fa-cutlery" aria-hidden="true"></i></div>
-                                <div class="form-select" id="default-select">
-                                    {{ formMenu.choice }}
-                                </div>
-                            </div>
-                            {% for error in formMenu.choice.errors %}
-                                 <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
-                            {% endfor %}
-                            <div class='mt-10'>
-                                {{ formMenu.addsubmit(class_="genric-btn primary radius") }}
-                            </div>
-                        </p>
-                    </div>
-                </form>
-                            <a href="logout" class="genric-btn primary radius">Logout From Website</a>
-                        </p>
-                    </p>
-                {% else %}
                 <br>
                 <p class="row align-items-center">
                     <p>
-                        <h2>User Login:</h2>
+                        <h2>Create Account:</h2>
                     </p>
                     <div>
-                        {{ formLogin.csrf_token }}
-                        {{ formLogin.hidden_tag() }}
+                        {{ formCreate.csrf_token }}
+                        {{ formCreate.hidden_tag() }}
                         <p>
                             <div class='mt-10'>
-                                {{ formLogin.loginusername(class_="single-input", placeholder="Username") }}
+                                {{ formCreate.createusername(class_="single-input", placeholder="Username") }}
                             </div>
-                            {% for error in formLogin.loginusername.errors %}
+                            {% for error in formCreate.createusername.errors %}
                                  <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
                             {% endfor %}
                             <div class='mt-10'>
-                                {{ formLogin.loginpassword(class_="single-input", placeholder="Password") }}
+                                {{ formCreate.createpassword(class_="single-input", placeholder="Password") }}
                             </div>
-                            {% for error in formLogin.loginpassword.errors %}
+                            {% for error in formCreate.createpassword.errors %}
+                                <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
+                            {% endfor %}
+                            <div class='mt-10'>
+                                {{ formCreate.createpasswordverify(class_="single-input", placeholder="Verify Password")}}
+                            </div>
+                            {% for error in formCreate.createpasswordverify.errors %}
                                  <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
                             {% endfor %}
-                            <div class="mt-10">
-                                {{ formLogin.loginsubmit(class_="genric-btn primary radius") }}
+                            <div class='mt-10'>
+                                {{ formCreate.createaccount(class_="genric-btn primary radius") }}
                             </div>
-                            {% if loginError %}
-                                <div class='mt-10'><span style="color: red;">[{{ loginError }}]</span></div>
+                            {% if createError %}
+                                <div class='mt-10'><span style="color: red;">[{{ createError }}]</span></div>
                             {% endif %}
                         </p>
                     </div>
-                    <div>
-                        <h4>Don't Have An Account?</h4><br>
-                        <a href="createaccount" class="genric-btn primary radius">Create Account</a>
-                    </div>
-            {% endif %}
-            </div>
-			</section>
+                </div>
+            </section>
             <!-- End Login/Customer area -->
 
-			<!-- start footer Area -->		
+			<!-- start footer Area -->
 			<footer class="footer-area">
 				<div class="footer-widget-wrap">
 					<div class="container">
@@ -183,7 +132,7 @@
 										</li>
 										<li class="d-flex justify-content-between">
 											<span>Sunday</span> <span>11:00 AM - 6:00 PM</span>
-										</li>																				
+										</li>
 									</ul>
 								</div>
 							</div>
@@ -198,21 +147,21 @@
 										<center>Management: <em>1-402-987-6543</em></center>
 									</p>
 								</div>
-							</div>						
+							</div>
 
-						</div>					
-					</div>					
+						</div>
+					</div>
 				</div>
 				<div class="footer-bottom-wrap">
 					<div class="container">
 						<div class="row footer-bottom d-flex justify-content-between align-items-center">
 							<p class="col-lg-8 col-mdcol-sm-6 -6 footer-text m-0"><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
 Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-						</div>						
+						</div>
 					</div>
 				</div>
 			</footer>
-			<!-- End footer Area -->	
+			<!-- End footer Area -->
 
 			<script src="static/js/vendor/jquery-2.2.4.min.js"></script>
 			<script src="static/js/popper.min.js"></script>
