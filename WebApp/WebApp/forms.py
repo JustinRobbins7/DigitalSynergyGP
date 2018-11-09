@@ -1,6 +1,8 @@
+# imort  flask_wtf to use forms
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, DecimalField, SelectField, validators
 
+# choices for drop down menu on the add menu item form
 menu_choices = [('appetizer', 'Appetizer'), ('lunch', 'Lunch'), ('dinner', 'Dinner'), ('dessert', 'Dessert'), ('beverage', 'Beverage')]
 
 

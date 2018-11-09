@@ -77,7 +77,7 @@
 			<div class="container">
                 <form action="" method="post" novalidate>
                 {% if current_user.is_authenticated %}
-                    {% if current_user.username == 'admin' %}
+                    {% if current_user.typeaccount == 1 %}
                         <p class="row align-items-center">
                         <p>
                             <p class="row align-items-center">
