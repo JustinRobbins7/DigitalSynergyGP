@@ -109,7 +109,9 @@
                             <div class='mt-10'>
                                 {{ formCreate.createaccount(class_="genric-btn primary radius") }}
                             </div>
-
+                            {% if createError %}
+                                <div class='mt-10'><span style="color: red;">[{{ createError }}]</span></div>
+                            {% endif %}
                         </p>
                     </div>
                 <p class="row align-items-center">
@@ -135,6 +137,9 @@
                             <div class="mt-10">
                                 {{ formLogin.loginsubmit(class_="genric-btn primary radius") }}
                             </div>
+                            {% if loginError %}
+                                <div class='mt-10'><span style="color: red;">[{{ loginError }}]</span></div>
+                            {% endif %}
                         </p>
                     </div>
                 <p class="row align-items-center">
