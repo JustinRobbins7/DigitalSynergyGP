@@ -1,8 +1,8 @@
 from flask import Flask, render_template, abort, redirect, request
 from jinja2 import TemplateNotFound
-from WebApp.WebApp.forms import AddMenuItem, CreateAccount, FormLogin, UsernameReturnDelete, UsernameReturnAdmin
+from WebApp.WebApp.forms import AddMenuItem, CreateAccount, FormLogin, UsernameReturnDelete, UsernameReturnAdmin, GiftCardAddition, AddBalance
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, UserMixin, current_user, login_user, logout_user
+from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user
 import pymysql
 
 app = Flask(__name__)
@@ -22,7 +22,7 @@ login_manager.login_view = 'login'
 
 # DB model for a user (admin or regular)
 # type account will allow distinguishing between regular/admin user in the .hmtl to display different elements
-class users(UserMixin, db.Model):
+class Users(UserMixin, db.Model):
     id = db.Column('user_id', db.Integer, primary_key=True)
     username = db.Column(db.String(100))
     password = db.Column(db.String(40))
@@ -30,11 +30,20 @@ class users(UserMixin, db.Model):
     typeaccount = db.Column(db.Integer)
 
 
+# DB model for a giftcard
+# giftcards will be added to a database, and normal users can add a balance to their account using
+# these cards
+class Giftcards(db.Model):
+    id = db.Column('id', db.Integer, primary_key=True)
+    number = db.Column(db.String(15))
+    balance = db.Column(db.DECIMAL(10, 2))
+
+
 db.create_all()
 
 # if there is no admin user in the database, this will create one. There should always be an admin account
-if db.session.query(users).filter(users.username == 'admin').count() == 0:
-    admin_user = users(username='admin', password='password', accountbalance=0.0, typeaccount=1)
+if db.session.query(Users).filter(Users.username == 'admin').count() == 0:
+    admin_user = Users(username='admin', password='password', accountbalance=0.0, typeaccount=1)
     db.session.add(admin_user)
     db.session.commit()
 
@@ -54,11 +63,7 @@ def createaccount_function():
         error = None
 
         # initialize forms needed
-        form_menu = AddMenuItem()
-        form_login = FormLogin()
         form_create = CreateAccount()
-        form_delete = UsernameReturnDelete()
-        form_makeadmin = UsernameReturnAdmin()
 
         # if create button is pressed
         if form_create.createaccount.data:
@@ -71,8 +76,8 @@ def createaccount_function():
 
                 # if user don't exist, create a temp user with all the data and add it to the users table in the DB,
                 # and then redirect to the myaccount page
-                if db.session.query(users).filter(users.username == temp_username).count() == 0:
-                    temp_user = users(username=temp_username.lower(), password=temp_password, accountbalance=0.0,
+                if db.session.query(Users).filter(Users.username == temp_username).count() == 0:
+                    temp_user = Users(username=temp_username.lower(), password=temp_password, accountbalance=0.0,
                                             typeaccount=0)
                     db.session.add(temp_user)
                     db.session.commit()
@@ -80,14 +85,10 @@ def createaccount_function():
                 # if user already exists, prompt user to either change username or login
                 else:
                     error = 'Account Already Exists: Choose Another Username or Login'
-                    return render_template('createaccount.html', formMenu=form_menu, formLogin=form_login,
-                                           formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
-                                           createError=error)
+                    return render_template('createaccount.html', formCreate=form_create, createError=error)
 
         # what to return on no button press
-        return render_template('createaccount.html', formMenu=form_menu, formLogin=form_login,
-                               formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
-                               loginError=error)
+        return render_template('createaccount.html', formCreate=form_create, loginError=error)
 
     except TemplateNotFound:
         abort(404)
@@ -98,11 +99,16 @@ def createaccount_function():
 def myaccount_function():
     try:
 
+        # messages that are passed to the html
         error = None
         dmessagegood = None
         dmessagebad = None
         amessagegood = None
         amessagebad = None
+        gcmessagegood = None
+        gcmessagebad = None
+        addmessagegood = None
+        addmessagebad = None
 
         # initialized forms needed
         form_menu = AddMenuItem()
@@ -110,8 +116,10 @@ def myaccount_function():
         form_create = CreateAccount()
         form_delete = UsernameReturnDelete()
         form_makeadmin = UsernameReturnAdmin()
+        form_addgiftcard = GiftCardAddition()
+        form_addbalance = AddBalance()
 
-        # if login button is pressed
+        # if login button is pressed ------------------------------------------------------------------------------
         if form_login.loginsubmit.data:
             # pull data from form
             form_login = FormLogin(request.form)
@@ -122,18 +130,21 @@ def myaccount_function():
 
                 # if the username and password combo is in the DB, then login the user using Flask-Login and then
                 # redirect to myaccount, which will now show a different page because user is logged in
-                if users.query.filter_by(username=temp_username, password=temp_password).count() != 0:
-                    user = users.query.filter_by(username=temp_username, password=temp_password).first()
+                if Users.query.filter_by(username=temp_username, password=temp_password).count() != 0:
+                    user = Users.query.filter_by(username=temp_username, password=temp_password).first()
                     login_user(user, remember=True)
                     return render_template('myaccount.html', formMenu=form_menu, formLogin=form_login,
-                                           formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin)
+                                           formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
+                                           formAddGiftcard=form_addgiftcard, formAddBalance=form_addbalance)
                 # if the combo doesn't exist in the DB, prompt user to create account if they don't have one
                 else:
                     error = 'Username or Password Incorrect: Create Account if you Don\'t Have One'
                     return render_template('myaccount.html', formMenu=form_menu, formLogin=form_login,
                                            formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
+                                           formAddGiftcard=form_addgiftcard, formAddBalance=form_addbalance,
                                            loginError=error)
 
+        # logic for adding a menu item to the website -------------------------------------------------------------
         if form_menu.addsubmit.data:
             form_menu = AddMenuItem(request.form)
             if form_menu.validate_on_submit():
@@ -143,44 +154,97 @@ def myaccount_function():
                 print(form_menu.choice.data)
                 return redirect('myaccount')
 
+        # logic for a user to add a balance to their account via a giftcard ---------------------------------------
+        if form_addbalance.addBalanceButton.data:
+            form_addbalance = AddBalance(request.form)
+            if form_addbalance.validate_on_submit():
+                temp_addnumber = form_addbalance.balanceNumber.data
+                # if gc number is not in database
+                if db.session.query(Giftcards).filter(Giftcards.number == temp_addnumber).count() == 0:
+                    gcmessagebad = "Gift Card does not exist. Check the numbers and try again."
+                    return render_template('myaccount.html', formMenu=form_menu, formLogin=form_login,
+                                           formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
+                                           formAddGiftcard=form_addgiftcard, formAddBalance=form_addbalance,
+                                           BalanceMessageB=gcmessagebad)
+                # gc number is in database
+                else:
+                    gift_card = Giftcards.query.filter_by(number=temp_addnumber).first()
+                    current_user.accountbalance += gift_card.balance
+                    Giftcards.query.filter_by(number=temp_addnumber).delete()
+                    db.session.commit()
+                    gcmessagegood = 'Balance has been added to your account.'
+                    return render_template('myaccount.html', formMenu=form_menu, formLogin=form_login,
+                                           formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
+                                           formAddGiftcard=form_addgiftcard, formAddBalance=form_addbalance,
+                                           BalanceMessageG=gcmessagegood)
+
+        # logic for adding a giftcard to the database -------------------------------------------------------------
+        if form_addgiftcard.addGiftCard.data:
+            form_addgiftcard = GiftCardAddition(request.form)
+            if form_addgiftcard.validate_on_submit():
+                temp_gcnumber = form_addgiftcard.giftCardNumber.data
+                temp_gcamount = form_addgiftcard.giftCardAmount.data
+                if db.session.query(Giftcards).filter(Giftcards.number == temp_gcnumber).count() == 0:
+                    temp_gc = Giftcards(number=temp_gcnumber, balance=temp_gcamount)
+                    db.session.add(temp_gc)
+                    db.session.commit()
+                    gcmessagegood = 'Giftcard Has Been Added'
+                    return render_template('myaccount.html', formMenu=form_menu, formLogin=form_login,
+                                           formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
+                                           formAddGiftcard=form_addgiftcard, formAddBalance=form_addbalance,
+                                           AddMessageG=gcmessagegood)
+                else:
+                    gcmessagebad = 'Giftcard Has Already Been Added'
+                    return render_template('myaccount.html', formMenu=form_menu, formLogin=form_login,
+                                           formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
+                                           formAddGiftcard=form_addgiftcard, formAddBalance=form_addbalance,
+                                           AddMessageB=gcmessagebad)
+
+        # logic for deleting a user from the website --------------------------------------------------------------
         if form_delete.returnButtonDelete.data:
             form_delete = UsernameReturnDelete(request.form)
             if form_delete.validate_on_submit():
                 temp_user = form_delete.returnUsernameDelete.data
-                if db.session.query(users).filter(users.username == temp_user).count() == 0:
+                if db.session.query(Users).filter(Users.username == temp_user).count() == 0:
                     dmessagebad = 'User Does Not Exists. Check Username and Enter Again'
                     return render_template('myaccount.html', formMenu=form_menu, formLogin=form_login,
-                                        formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
-                                        DeleteMessageB=dmessagebad)
+                                           formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
+                                           formAddGiftcard=form_addgiftcard, formAddBalance=form_addbalance,
+                                           DeleteMessageB=dmessagebad)
                 else:
-                    users.query.filter_by(username=temp_user).delete()
+                    Users.query.filter_by(username=temp_user).delete()
                     db.session.commit()
                     dmessagegood = 'User Has Been Deleted'
                     return render_template('myaccount.html', formMenu=form_menu, formLogin=form_login,
                                            formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
+                                           formAddGiftcard=form_addgiftcard, formAddBalance=form_addbalance,
                                            DeleteMessageG=dmessagegood)
 
+        # logic for making a user and admin -----------------------------------------------------------------------
         if form_makeadmin.returnButtonAdmin.data:
             form_makeadmin = UsernameReturnAdmin(request.form)
             if form_makeadmin.validate_on_submit():
                 temp_user = form_makeadmin.returnUsernameAdmin.data
-                if db.session.query(users).filter(users.username == temp_user).count() == 0:
+                if db.session.query(Users).filter(Users.username == temp_user).count() == 0:
                     amessagebad = 'User Does Not Exists. Check Username and Enter Again'
                     return render_template('myaccount.html', formMenu=form_menu, formLogin=form_login,
-                                        formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
-                                        AdminMessageB=amessagebad)
+                                           formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
+                                           formAddGiftcard=form_addgiftcard, formAddBalance=form_addbalance,
+                                           AdminMessageB=amessagebad)
                 else:
-                    temp = users.query.filter_by(username=temp_user).first()
+                    temp = Users.query.filter_by(username=temp_user).first()
                     temp.typeaccount = 1
                     db.session.commit()
                     amessagegood = 'Account Has Been Made an Admin'
                     return render_template('myaccount.html', formMenu=form_menu, formLogin=form_login,
                                            formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
+                                           formAddGiftcard=form_addgiftcard, formAddBalance=form_addbalance,
                                            AdminMessageG=amessagegood)
 
-        # on no special cases return myaccount page
+        # on no special cases return myaccount page ---------------------------------------------------------------
         return render_template('myaccount.html', formMenu=form_menu, formLogin=form_login,
-                               formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin)
+                               formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
+                               formAddGiftcard=form_addgiftcard, formAddBalance=form_addbalance)
 
     except TemplateNotFound:
         abort(404)
@@ -213,7 +277,7 @@ def html_lookup(page):
 # handler for the Flask-Login package
 @login_manager.user_loader
 def login_handler(user_id):
-    return users.query.get(int(user_id))
+    return Users.query.get(int(user_id))
 
 # def delete_account():
     # delete from database

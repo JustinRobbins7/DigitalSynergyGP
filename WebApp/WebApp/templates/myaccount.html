@@ -172,9 +172,41 @@
                                     <div class='mt-10'><span style="color: blue;">[{{ DeleteMessageG }}]</span></div>
                                 {% endif %}
                             </p>
-                            <br>
                         </p>
-                    </div>
+                        <p>
+                            <h4>Add a Giftcard:</h4>
+                            </p>
+                            <div>
+                            {{ formAddGiftcard.csrf_token }}
+                            {{ formAddGiftcard.hidden_tag() }}
+                            <p>
+                                <div class='mt-10'>
+                                    {{ formAddGiftcard.giftCardNumber(class_="single-input", placeholder="Gift Card Number") }}
+                                </div>
+                                {% for error in formAddGiftcard.giftCardNumber.errors %}
+                                    <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
+                                {% endfor %}
+                                <div class="input-group-icon mt-10">
+                                    <div class="icon"><i class="fa fa-usd" aria-hidden="true"></i></div>
+                                    <div class="form-select" id="default-select">
+                                        {{ formAddGiftcard.giftCardAmount }}
+                                    </div>
+                                </div>
+                                {% for error in formAddGiftcard.giftCardAmount.errors %}
+                                    <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
+                                {% endfor %}
+                                <div class='mt-10'>
+                                    {{ formAddGiftcard.addGiftCard(class_="genric-btn primary radius") }}
+                                </div>
+                                {% if AddMessageB %}
+                                    <div class='mt-10'><span style="color: red;">[{{ AddMessageB }}]</span></div>
+                                {% endif %}
+                                {% if AddMessageG %}
+                                    <div class='mt-10'><span style="color: blue;">[{{ AddMessageG }}]</span></div>
+                                {% endif %}
+                            </p>
+                        </p>
+                    </div><br>
 
                 </form>
                             <a href="logout" class="genric-btn primary radius">Logout From Website</a>
@@ -186,7 +218,38 @@
                         <p>
                             <p class="row align-items-center">
                             <p>
+                                <h1>User Dashboard</h1>
+                            </p>
+                            <p>
                                 <div class="text-capitalize"><h2>Welcome: {{ current_user.username }}</h2></div><br>
+                            </p>
+                            <p>
+                                <h3>Account Balance: ${{ current_user.accountbalance }}</h3><br>
+                            </p>
+                            <p>
+                                <h4>Add a Balance from a Giftcard:</h4>
+                            </p>
+                            <div>
+                                {{ formAddBalance.csrf_token }}
+                                {{ formAddBalance.hidden_tag() }}
+                            <p>
+                                <div class='mt-10'>
+                                    {{ formAddBalance.balanceNumber(class_="single-input", placeholder="Gift Card Number") }}
+                                </div>
+                                {% for error in formAddBalance.balanceNumber.errors %}
+                                    <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
+                                {% endfor %}
+                                <div class='mt-10'>
+                                    {{ formAddBalance.addBalanceButton(class_="genric-btn primary radius") }}
+                                </div>
+                                {% if BalanceMessageB %}
+                                    <div class='mt-10'><span style="color: red;">[{{ BalanceMessageB }}]</span></div>
+                                {% endif %}
+                                {% if BalanceMessageG %}
+                                    <div class='mt-10'><span style="color: blue;">[{{ BalanceMessageG }}]</span></div>
+                                {% endif %}
+                            <br>
+                            </p>
                                 <a href="logout" class="genric-btn primary radius">Logout From Website</a>
                             </p>
                         </p>

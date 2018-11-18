@@ -1,9 +1,10 @@
-# imort  flask_wtf to use forms
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, DecimalField, SelectField, validators
 
 # choices for drop down menu on the add menu item form
 menu_choices = [('appetizer', 'Appetizer'), ('lunch', 'Lunch'), ('dinner', 'Dinner'), ('dessert', 'Dessert'), ('beverage', 'Beverage')]
+# choices for dollar amounts of gift cards being added by admins
+gc_choices = [('5', 5), ('10', 10), ('15', 15), ('25', 25), ('50', 50), ('100', 100)]
 
 
 # form for creating account
@@ -41,3 +42,16 @@ class UsernameReturnDelete(FlaskForm):
 class UsernameReturnAdmin(FlaskForm):
     returnUsernameAdmin = StringField('Username', [validators.DataRequired()])
     returnButtonAdmin = SubmitField('Submit')
+
+
+# form for admins to add giftcards to the database to be used by users of the website
+class GiftCardAddition(FlaskForm):
+    giftCardNumber = StringField('Gift Card Number', [validators.DataRequired(), validators.Length(min=15, max=15, message='Gift Card Number should be 15 characters long.')])
+    giftCardAmount = SelectField(label='Gift Card Amount', choices=gc_choices)
+    addGiftCard = SubmitField('Add Gift Card')
+
+
+# form for users to add a giftcard from the database to their balance
+class AddBalance(FlaskForm):
+    balanceNumber = StringField('Gift Card Number', [validators.DataRequired(), validators.Length(min=15, max=15, message='Gift Card Number should be 15 characters long.')])
+    addBalanceButton = SubmitField('Add Balance from Gift Card')
