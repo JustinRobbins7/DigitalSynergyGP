@@ -236,9 +236,69 @@
                                 {% endif %}
                             </p>
                         </p>
+                        </form>
+                        <form method="POST" enctype="multipart/form-data">
+                        <p>
+                            <h4>Add a Gallery Image:</h4>
+                            </p>
+                            <div>
+                            {{ formAddImage.csrf_token }}
+                            {{ formAddImage.hidden_tag() }}
+                            <p>
+                                <div class='mt-10'>
+                                    {{ formAddImage.galleryImage(class_="") }}
+                                </div>
+                                {% for error in formAddImage.galleryImage.errors %}
+                                    <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
+                                {% endfor %}
+                                <div class="input-group-icon mt-10">
+                                    <div class="icon"><i class="fa fa-cutlery" aria-hidden="true"></i></div>
+                                    <div class="form-select" id="default-select">
+                                        {{ formAddImage.galleryLocation }}
+                                    </div>
+                                </div>
+                                {% for error in formAddImage.galleryLocation.errors %}
+                                    <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
+                                {% endfor %}
+                                <div class='mt-10'>
+                                    {{ formAddImage.galleryButton(class_="genric-btn primary radius") }}
+                                </div>
+                                {% if ImageMessageB %}
+                                    <div class='mt-10'><span style="color: red;">[{{ ImageMessageB }}]</span></div>
+                                {% endif %}
+                                {% if ImageMessageG %}
+                                    <div class='mt-10'><span style="color: blue;">[{{ ImageMessageG }}]</span></div>
+                                {% endif %}
+                            </p>
+                        </p>
+                        </form>
+                        <form action="" method="post" novalidate>
+                        <p>
+                            <h4>Remove a Gallery Image:</h4>
+                            </p>
+                            <div>
+                            {{ formRemoveImage.csrf_token }}
+                            {{ formRemoveImage.hidden_tag() }}
+                            <p>
+                                <div class='mt-10'>
+                                    {{ formRemoveImage.imageName(class_="single-input", placeholder="File Name to Remove") }}
+                                </div>
+                                {% for error in formRemoveImage.imageName.errors %}
+                                    <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
+                                {% endfor %}
+                                <div class='mt-10'>
+                                    {{ formRemoveImage.removeImageButton(class_="genric-btn primary radius") }}
+                                </div>
+                                {% if RImageMessageB %}
+                                    <div class='mt-10'><span style="color: red;">[{{ RImageMessageB }}]</span></div>
+                                {% endif %}
+                                {% if RImageMessageG %}
+                                    <div class='mt-10'><span style="color: blue;">[{{ RImageMessageG }}]</span></div>
+                                {% endif %}
+                            </p>
+                        </p>
+                        </form>
                     </div><br>
-
-                </form>
                             <a href="logout" class="genric-btn primary radius">Logout From Website</a>
                         </p>
                     </p>

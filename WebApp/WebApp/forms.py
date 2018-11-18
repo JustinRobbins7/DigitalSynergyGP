@@ -1,10 +1,13 @@
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileRequired, FileAllowed
 from wtforms import StringField, PasswordField, SubmitField, DecimalField, SelectField, validators
 
 # choices for drop down menu on the add menu item form
 menu_choices = [('appetizer', 'Appetizer'), ('lunch', 'Lunch'), ('dinner', 'Dinner'), ('dessert', 'Dessert'), ('beverage', 'Beverage')]
 # choices for dollar amounts of gift cards being added by admins
 gc_choices = [('5', 5), ('10', 10), ('15', 15), ('25', 25), ('50', 50), ('100', 100)]
+# choices for where to put the image on the gallery page
+gallery_choices = [('appetizer', 'Appetizer'), ('lunch', 'Lunch'), ('dinner', 'Dinner'), ('dessert', 'Dessert'), ('beverage', 'Beverage')]
 
 
 # form for creating account
@@ -61,3 +64,16 @@ class AddBalance(FlaskForm):
 class RemoveMenuItem(FlaskForm):
     removeItemTitle = StringField('Item to Remove', [validators.DataRequired()])
     removeItemButton = SubmitField('Remove Menu Item')
+
+
+# form to add image to the gallery
+class AddImage(FlaskForm):
+    galleryImage = FileField(validators=[FileRequired(), FileAllowed(['jpg', 'jpe', 'jpeg', 'png', 'gif', 'svg', 'bmp'], 'Only Image Uploads Allowed.')])
+    galleryLocation = SelectField(label='Location', choices=gallery_choices)
+    galleryButton = SubmitField('Add Image')
+
+
+# form for an admin to remove an image from the database
+class RemoveImage(FlaskForm):
+    imageName = StringField('Filename to Delete', [validators.DataRequired()])
+    removeImageButton = SubmitField('Remove Image')

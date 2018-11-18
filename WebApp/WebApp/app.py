@@ -1,12 +1,18 @@
 from flask import Flask, render_template, abort, redirect, request
 from jinja2 import TemplateNotFound
 from WebApp.WebApp.forms import AddMenuItem, CreateAccount, FormLogin, UsernameReturnDelete, UsernameReturnAdmin, \
-                                GiftCardAddition, AddBalance, RemoveMenuItem
+                                GiftCardAddition, AddBalance, RemoveMenuItem, AddImage, RemoveImage
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user
+from flask_uploads import UploadSet, IMAGES, configure_uploads
 import pymysql
+import os
 
 app = Flask(__name__)
+
+app.config['UPLOADED_IMAGES_DEST'] = 'static/uploads/'
+
+# Configuration for WebApp ----------------------------------------------------------------------------------------
 
 # secret key to allow for CSRF forms
 app.config['SECRET_KEY'] = 'any secret string'
@@ -20,6 +26,12 @@ login_manager = LoginManager(app)
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+# configuration for file uploads
+imagesList = UploadSet('images', IMAGES)
+configure_uploads(app, imagesList)
+
+
+# Models for Database ---------------------------------------------------------------------------------------------
 
 # DB model for a user (admin or regular)
 # type account will allow distinguishing between regular/admin user in the .hmtl to display different elements
@@ -50,6 +62,16 @@ class MenuItems(db.Model):
     itemtype = db.Column(db.String(10))
 
 
+# DB model for images being added by an admin
+# to be displayed on the gallery webpage of the website
+class GalleryImages(db.Model):
+    id = db.Column('id', db.Integer, primary_key=True)
+    imagefilename = db.Column(db.String(100))
+    imageurl = db.Column(db.String(200))
+    imagelocation = db.Column(db.String(10))
+
+
+# creates all the models within the database
 db.create_all()
 
 # if there is no admin user in the database, this will create one. There should always be an admin account
@@ -58,6 +80,8 @@ if db.session.query(Users).filter(Users.username == 'admin').count() == 0:
     db.session.add(admin_user)
     db.session.commit()
 
+
+# Routes for WebApp -----------------------------------------------------------------------------------------------
 
 # what to do on logout
 @app.route('/logout')
@@ -110,9 +134,22 @@ def createaccount_function():
 # to place all the items
 @app.route('/menu')
 def menu_function():
+    # command to retrieve all menu item entries from database
     test = db.engine.execute('SELECT * FROM restaurant.menu_items')
     menuitemlist = test.fetchall()
     return render_template('menu.html', MenuItemList=menuitemlist)
+
+
+# what to do on gallery
+# used to pass a list of all the images and their locations from the database to the html
+# to allow for a loop and to place the images in their correct location
+@app.route('/gallery')
+def gallery_function():
+    # command to retrieve all gallery images from database
+    testimages = db.engine.execute('SELECT * FROM restaurant.gallery_images')
+    testimageslist = testimages.fetchall()
+    print(testimageslist)
+    return render_template('gallery.html', ImagesItemList=testimageslist)
 
 
 # what to do on my account
@@ -134,6 +171,10 @@ def myaccount_function():
         menumessagebad = None
         rimessagegood = None
         rimessagebad = None
+        aimessagegood = None
+        aimessagebad = None
+        rimgmessagegood = None
+        rimgmessagebad = None
 
         # initialized forms needed
         form_menu = AddMenuItem()
@@ -144,6 +185,8 @@ def myaccount_function():
         form_addgiftcard = GiftCardAddition()
         form_addbalance = AddBalance()
         form_removeitem = RemoveMenuItem()
+        form_addimage = AddImage()
+        form_removeimage = RemoveImage()
 
         # if login button is pressed ------------------------------------------------------------------------------
         if form_login.loginsubmit.data:
@@ -162,14 +205,16 @@ def myaccount_function():
                     return render_template('myaccount.html', formMenu=form_menu, formLogin=form_login,
                                            formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
                                            formAddGiftcard=form_addgiftcard, formAddBalance=form_addbalance,
-                                           formRemoveItem=form_removeitem)
+                                           formRemoveItem=form_removeitem, formAddImage=form_addimage,
+                                           formRemoveImage=form_removeimage)
                 # if the combo doesn't exist in the DB, prompt user to create account if they don't have one
                 else:
                     error = 'Username or Password Incorrect: Create Account if you Don\'t Have One'
                     return render_template('myaccount.html', formMenu=form_menu, formLogin=form_login,
                                            formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
                                            formAddGiftcard=form_addgiftcard, formAddBalance=form_addbalance,
-                                           formRemoveItem=form_removeitem, loginError=error)
+                                           formRemoveItem=form_removeitem, formAddImage=form_addimage,
+                                           formRemoveImage=form_removeimage, loginError=error)
 
         # logic for adding a menu item to the website -------------------------------------------------------------
         if form_menu.addsubmit.data:
@@ -189,14 +234,16 @@ def myaccount_function():
                     return render_template('myaccount.html', formMenu=form_menu, formLogin=form_login,
                                            formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
                                            formAddGiftcard=form_addgiftcard, formAddBalance=form_addbalance,
-                                           formRemoveItem=form_removeitem, MenuMessageG=menumessagegood)
+                                           formRemoveItem=form_removeitem, formAddImage=form_addimage,
+                                           formRemoveImage=form_removeimage, MenuMessageG=menumessagegood)
                 # if an item with that title already exists don't add it
                 else:
                     menumessagebad = 'Item already exists in the menu. Check name and try again.'
                     return render_template('myaccount.html', formMenu=form_menu, formLogin=form_login,
                                            formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
                                            formAddGiftcard=form_addgiftcard, formAddBalance=form_addbalance,
-                                           formRemoveItem=form_removeitem, MenuMessageB=menumessagebad)
+                                           formRemoveItem=form_removeitem, formAddImage=form_addimage,
+                                           formRemoveImage=form_removeimage, MenuMessageB=menumessagebad)
 
         # logic for removing a menu item from the website ---------------------------------------------------------
         if form_removeitem.removeItemButton.data:
@@ -209,7 +256,8 @@ def myaccount_function():
                     return render_template('myaccount.html', formMenu=form_menu, formLogin=form_login,
                                            formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
                                            formAddGiftcard=form_addgiftcard, formAddBalance=form_addbalance,
-                                           formRemoveItem=form_removeitem, RemoveMessageB=rimessagebad)
+                                           formRemoveItem=form_removeitem, formAddImage=form_addimage,
+                                           formRemoveImage=form_removeimage, RemoveMessageB=rimessagebad)
                 # item with the remove title is in the database for menu items
                 else:
                     MenuItems.query.filter_by(itemtitle=temp_itemremove).delete()
@@ -218,7 +266,8 @@ def myaccount_function():
                     return render_template('myaccount.html', formMenu=form_menu, formLogin=form_login,
                                            formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
                                            formAddGiftcard=form_addgiftcard, formAddBalance=form_addbalance,
-                                           formRemoveItem=form_removeitem, RemoveMessageG=rimessagegood)
+                                           formRemoveItem=form_removeitem, formAddImage=form_addimage,
+                                           formRemoveImage=form_removeimage, RemoveMessageG=rimessagegood)
 
         # logic for a user to add a balance to their account via a giftcard ---------------------------------------
         if form_addbalance.addBalanceButton.data:
@@ -231,7 +280,8 @@ def myaccount_function():
                     return render_template('myaccount.html', formMenu=form_menu, formLogin=form_login,
                                            formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
                                            formAddGiftcard=form_addgiftcard, formAddBalance=form_addbalance,
-                                           formRemoveItem=form_removeitem, BalanceMessageB=gcmessagebad)
+                                           formRemoveItem=form_removeitem, formAddImage=form_addimage,
+                                           formRemoveImage=form_removeimage, BalanceMessageB=gcmessagebad)
                 # gc number is in database
                 else:
                     gift_card = Giftcards.query.filter_by(number=temp_addnumber).first()
@@ -242,7 +292,8 @@ def myaccount_function():
                     return render_template('myaccount.html', formMenu=form_menu, formLogin=form_login,
                                            formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
                                            formAddGiftcard=form_addgiftcard, formAddBalance=form_addbalance,
-                                           formRemoveItem=form_removeitem, BalanceMessageG=gcmessagegood)
+                                           formRemoveItem=form_removeitem, formAddImage=form_addimage,
+                                           formRemoveImage=form_removeimage, BalanceMessageG=gcmessagegood)
 
         # logic for adding a giftcard to the database -------------------------------------------------------------
         if form_addgiftcard.addGiftCard.data:
@@ -259,14 +310,16 @@ def myaccount_function():
                     return render_template('myaccount.html', formMenu=form_menu, formLogin=form_login,
                                            formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
                                            formAddGiftcard=form_addgiftcard, formAddBalance=form_addbalance,
-                                           formRemoveItem=form_removeitem, AddMessageG=gcmessagegood)
+                                           formRemoveItem=form_removeitem, formAddImage=form_addimage,
+                                           formRemoveImage=form_removeimage, AddMessageG=gcmessagegood)
                 # the gift card number already exists in the database
                 else:
                     gcmessagebad = 'Giftcard Has Already Been Added'
                     return render_template('myaccount.html', formMenu=form_menu, formLogin=form_login,
                                            formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
                                            formAddGiftcard=form_addgiftcard, formAddBalance=form_addbalance,
-                                           formRemoveItem=form_removeitem, AddMessageB=gcmessagebad)
+                                           formRemoveItem=form_removeitem, formAddImage=form_addimage,
+                                           formRemoveImage=form_removeimage, AddMessageB=gcmessagebad)
 
         # logic for deleting a user from the website --------------------------------------------------------------
         if form_delete.returnButtonDelete.data:
@@ -279,7 +332,8 @@ def myaccount_function():
                     return render_template('myaccount.html', formMenu=form_menu, formLogin=form_login,
                                            formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
                                            formAddGiftcard=form_addgiftcard, formAddBalance=form_addbalance,
-                                           formRemoveItem=form_removeitem, DeleteMessageB=dmessagebad)
+                                           formRemoveItem=form_removeitem, formAddImage=form_addimage,
+                                           formRemoveImage=form_removeimage, DeleteMessageB=dmessagebad)
                 # delete account with the username that was given
                 else:
                     Users.query.filter_by(username=temp_user).delete()
@@ -288,7 +342,61 @@ def myaccount_function():
                     return render_template('myaccount.html', formMenu=form_menu, formLogin=form_login,
                                            formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
                                            formAddGiftcard=form_addgiftcard, formAddBalance=form_addbalance,
-                                           formRemoveItem=form_removeitem, DeleteMessageG=dmessagegood)
+                                           formRemoveItem=form_removeitem, formAddImage=form_addimage,
+                                           formRemoveImage=form_removeimage, DeleteMessageG=dmessagegood)
+
+        # logic for uploading a file for the gallery --------------------------------------------------------------
+        if form_addimage.galleryButton.data:
+            form_addimage = AddImage()
+            if form_addimage.validate_on_submit():
+                temp_filename = imagesList.save(request.files['galleryImage'])
+                temp_url = imagesList.url(temp_filename)
+                temp_imagelocation = form_addimage.galleryLocation.data
+                # image does not already exists within database
+                if db.session.query(GalleryImages).filter(GalleryImages.imagefilename == temp_filename).count() == 0:
+                    aimessagegood = 'Image Has Been Added'
+                    temp_galleryimages = GalleryImages(imagefilename=temp_filename, imageurl=temp_url,
+                                                       imagelocation=temp_imagelocation)
+                    db.session.add(temp_galleryimages)
+                    db.session.commit()
+                    return render_template('myaccount.html', formMenu=form_menu, formLogin=form_login,
+                                           formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
+                                           formAddGiftcard=form_addgiftcard, formAddBalance=form_addbalance,
+                                           formRemoveItem=form_removeitem, formAddImage=form_addimage,
+                                           formRemoveImage=form_removeimage, ImageMessageG=aimessagegood)
+                # image already exists within the database
+                else:
+                    aimessagebad = 'Image Already Exists. Check File and Try Again.'
+                    return render_template('myaccount.html', formMenu=form_menu, formLogin=form_login,
+                                           formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
+                                           formAddGiftcard=form_addgiftcard, formAddBalance=form_addbalance,
+                                           formRemoveItem=form_removeitem, formAddImage=form_addimage,
+                                           formRemoveImage=form_removeimage, ImageMessageB=aimessagebad)
+
+        # logic for removing a file for the gallery ---------------------------------------------------------------
+        if form_removeimage.removeImageButton.data:
+            form_removeimage = RemoveImage(request.form)
+            if form_removeimage.validate_on_submit():
+                temp_removeimage = form_removeimage.imageName.data
+                # if image with name passed does not exist within the database
+                if db.session.query(GalleryImages).filter(GalleryImages.imagefilename == temp_removeimage).count() == 0:
+                    rimgmessagebad = 'Image Does Not Exist. Check Name and Try Again.'
+                    return render_template('myaccount.html', formMenu=form_menu, formLogin=form_login,
+                                           formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
+                                           formAddGiftcard=form_addgiftcard, formAddBalance=form_addbalance,
+                                           formRemoveItem=form_removeitem, formAddImage=form_addimage,
+                                           formRemoveImage=form_removeimage, RImageMessageB=rimgmessagebad)
+                else:
+                    GalleryImages.query.filter_by(imagefilename=temp_removeimage).delete()
+                    db.session.commit()
+                    removepath = imagesList.path(temp_removeimage)
+                    os.remove(removepath)
+                    rimgmessagegood = 'Image Successfully Deleted'
+                    return render_template('myaccount.html', formMenu=form_menu, formLogin=form_login,
+                                           formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
+                                           formAddGiftcard=form_addgiftcard, formAddBalance=form_addbalance,
+                                           formRemoveItem=form_removeitem, formAddImage=form_addimage,
+                                           formRemoveImage=form_removeimage, RImageMessageG=rimgmessagegood)
 
         # logic for making a user and admin -----------------------------------------------------------------------
         if form_makeadmin.returnButtonAdmin.data:
@@ -301,7 +409,8 @@ def myaccount_function():
                     return render_template('myaccount.html', formMenu=form_menu, formLogin=form_login,
                                            formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
                                            formAddGiftcard=form_addgiftcard, formAddBalance=form_addbalance,
-                                           formRemoveItem=form_removeitem, AdminMessageB=amessagebad)
+                                           formRemoveItem=form_removeitem, formAddImage=form_addimage,
+                                           formRemoveImage=form_removeimage, AdminMessageB=amessagebad)
                 # make the user an admin based on the username given
                 else:
                     temp = Users.query.filter_by(username=temp_user).first()
@@ -311,13 +420,15 @@ def myaccount_function():
                     return render_template('myaccount.html', formMenu=form_menu, formLogin=form_login,
                                            formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
                                            formAddGiftcard=form_addgiftcard, formAddBalance=form_addbalance,
-                                           formRemoveItem=form_removeitem, AdminMessageG=amessagegood)
+                                           formRemoveItem=form_removeitem, formAddImage=form_addimage,
+                                           formRemoveImage=form_removeimage, AdminMessageG=amessagegood)
 
         # on no special cases return myaccount page ---------------------------------------------------------------
         return render_template('myaccount.html', formMenu=form_menu, formLogin=form_login,
                                formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
                                formAddGiftcard=form_addgiftcard, formAddBalance=form_addbalance,
-                               formRemoveItem=form_removeitem)
+                               formRemoveItem=form_removeitem, formAddImage=form_addimage,
+                               formRemoveImage=form_removeimage)
 
     except TemplateNotFound:
         abort(404)
@@ -337,6 +448,7 @@ def html_lookup(page):
     if page == 'createaccount':
         return createaccount_function()
 
+    # call menu functionality from function
     if page == 'menu':
         return menu_function()
 
@@ -351,10 +463,6 @@ def html_lookup(page):
 @login_manager.user_loader
 def login_handler(user_id):
     return Users.query.get(int(user_id))
-
-# def delete_account():
-    # delete from database
-    # redirect to homepage
 
 
 # runs application
