@@ -124,6 +124,36 @@
                             <div class='mt-10'>
                                 {{ formMenu.addsubmit(class_="genric-btn primary radius") }}
                             </div>
+                            {% if MenuMessageB %}
+                                 <div class='mt-10'><span style="color: red;">[{{ MenuMessageB }}]</span></div>
+                            {% endif %}
+                            {% if MenuMessageG %}
+                                 <div class='mt-10'><span style="color: blue;">[{{ MenuMessageG }}]</span></div>
+                            {% endif %}
+                        </p>
+                        <p>
+                            <h4>Remove a Menu Item:</h4>
+                            </p>
+                            <div>
+                            {{ formRemoveItem.csrf_token }}
+                            {{ formRemoveItem.hidden_tag() }}
+                            <p>
+                                <div class='mt-10'>
+                                    {{ formRemoveItem.removeItemTitle(class_="single-input", placeholder="Title of Item to Remove") }}
+                                </div>
+                                {% for error in formRemoveItem.removeItemTitle.errors %}
+                                    <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
+                                {% endfor %}
+                                <div class='mt-10'>
+                                    {{ formRemoveItem.removeItemButton(class_="genric-btn primary radius") }}
+                                </div>
+                                {% if RemoveMessageB %}
+                                    <div class='mt-10'><span style="color: red;">[{{ RemoveMessageB }}]</span></div>
+                                {% endif %}
+                                {% if RemoveMessageG %}
+                                    <div class='mt-10'><span style="color: blue;">[{{ RemoveMessageG }}]</span></div>
+                                {% endif %}
+                            </p>
                         </p>
                         <p>
                             <h4>Make a User an Admin:</h4>
@@ -221,7 +251,7 @@
                                 <h1>User Dashboard</h1>
                             </p>
                             <p>
-                                <div class="text-capitalize"><h2>Welcome: {{ current_user.username }}</h2></div><br>
+                                <div class="text-capitalize"><h2>Welcome {{ current_user.username }}!</h2></div><br>
                             </p>
                             <p>
                                 <h3>Account Balance: ${{ current_user.accountbalance }}</h3><br>

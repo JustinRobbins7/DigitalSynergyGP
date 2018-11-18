@@ -54,4 +54,10 @@ class GiftCardAddition(FlaskForm):
 # form for users to add a giftcard from the database to their balance
 class AddBalance(FlaskForm):
     balanceNumber = StringField('Gift Card Number', [validators.DataRequired(), validators.Length(min=15, max=15, message='Gift Card Number should be 15 characters long.')])
-    addBalanceButton = SubmitField('Add Balance from Gift Card')
+    addBalanceButton = SubmitField('Redeem Gift Card')
+
+
+# form to allow admins to remove items from the menu by a title
+class RemoveMenuItem(FlaskForm):
+    removeItemTitle = StringField('Item to Remove', [validators.DataRequired()])
+    removeItemButton = SubmitField('Remove Menu Item')

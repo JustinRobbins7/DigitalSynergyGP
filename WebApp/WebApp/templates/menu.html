@@ -93,78 +93,73 @@
                         <li data-filter=".dessert">Desserts</li>
                         <li data-filter=".beverages">Beverages</li>
                     </ul>
-                    
                     <div class="filters-content">
-                        <div class="row grid">
-                            <div class="col-md-6 all appetizer">
-								<div class="single-menu">
-									<div class="title-wrap d-flex justify-content-between">
-										<h4>Test Appetizer</h4>
-										<h4 class="price">$1</h4>
-									</div>			
-									<p>
-										Test Appetizer.
-									</p>									
-								</div>					                               
-                            </div>                           
+                    <div class="row grid">
+                        {% for MenuItems in MenuItemList %}
+                        {% if MenuItems[4] == 'appetizer' %}
+                        <div class="col-md-6 all appetizer">
+                            <div class="single-menu">
+                                <div class="title-wrap d-flex justify-content-between">
+                                    <h4>{{ MenuItems[1] }}</h4>
+                                    <h4 class="price">${{ MenuItems[3] }}</h4>
+                                </div>
+                                <p>
+                                    {{ MenuItems[2] }}
+                                </p>
+                            </div>
+                        </div>
+                        {% elif MenuItems[4] == 'lunch' %}
                             <div class="col-md-6 all lunch">
 								<div class="single-menu">
 									<div class="title-wrap d-flex justify-content-between">
-										<h4>Test Lunch</h4>
-										<h4 class="price">$1.49</h4>
-									</div>			
+										<h4>{{ MenuItems[1] }}</h4>
+										<h4 class="price">${{ MenuItems[3] }}</h4>
+									</div>
 									<p>
-										Test Lunch.
-									</p>									
+										{{ MenuItems[2] }}
+									</p>
 								</div>
                             </div>
+                        {% elif MenuItems[4] == 'dinner' %}
                             <div class="col-md-6 all dinner">
 								<div class="single-menu">
 									<div class="title-wrap d-flex justify-content-between">
-										<h4>Test Dinner</h4>
-										<h4 class="price">$129</h4>
-									</div>			
+										<h4>{{ MenuItems[1] }}</h4>
+										<h4 class="price">${{ MenuItems[3] }}</h4>
+									</div>
 									<p>
-										Test Dinner.
-									</p>									
+										{{ MenuItems[2] }}
+									</p>
 								</div>
                             </div>
+                        {% elif MenuItems[4] == 'dessert' %}
                             <div class="col-md-6 all dessert">
 								<div class="single-menu">
 									<div class="title-wrap d-flex justify-content-between">
-										<h4>Test Dessert</h4>
-										<h4 class="price">$1</h4>
+										<h4>{{ MenuItems[1] }}</h4>
+										<h4 class="price">${{ MenuItems[3] }}</h4>
 									</div>
 									<p>
-										Test Dessert.
-									</p>									
+										{{ MenuItems[2] }}
+									</p>
 								</div>
                             </div>
+                        {% elif MenuItems[4] == 'beverage' %}
                             <div class="col-md-6 all beverages">
 								<div class="single-menu">
 									<div class="title-wrap d-flex justify-content-between">
-										<h4>Test Beverages</h4>
-										<h4 class="price">$11</h4>
+										<h4>{{ MenuItems[1] }}</h4>
+										<h4 class="price">${{ MenuItems[3] }}</h4>
 									</div>
 									<p>
-										Test Beverages.
-									</p>									
+										{{ MenuItems[2] }}
+									</p>
 								</div>
                             </div>
-                            <div class="col-md-6 all dinner">
-								<div class="single-menu">
-									<div class="title-wrap d-flex justify-content-between">
-										<h4>Test Dinner 2</h4>
-										<h4 class="price">$59</h4>
-									</div>
-									<p>
-										Test Dinner 2.
-									</p>									
-								</div>
-                            </div>                            
-                        </div>
+                        {% endif %}
+                    {% endfor %}
                     </div>
-                    
+                    </div>
                 </div>
             </section>
             <!-- End menu-area Area -->
