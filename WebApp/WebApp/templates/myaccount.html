@@ -77,15 +77,17 @@
 			<div class="container">
                 <form action="" method="post" novalidate>
                 {% if current_user.is_authenticated %}
+                    <!-- admin dashboard -->
                     {% if current_user.typeaccount == 1 %}
                         <p class="row align-items-center">
                         <p>
                             <p class="row align-items-center">
                             <p>
-                                <div class="text-capitalize"><h2>Welcome: {{ current_user.username }}</h2></div>
+                                <h1>Admin Dashboard</h1><br>
+                                <div class="text-capitalize"><h2>Welcome {{ current_user.username }}!</h2></div>
                             </p>
                             <p>
-                                <h2>Add Menu Item:</h2>
+                                <h4>Add Menu Item:</h4>
                             </p>
                             <div>
                             {{ formMenu.csrf_token }}
@@ -123,11 +125,62 @@
                                 {{ formMenu.addsubmit(class_="genric-btn primary radius") }}
                             </div>
                         </p>
+                        <p>
+                            <h4>Make a User an Admin:</h4>
+                            </p>
+                            <div>
+                            {{ formAdmin.csrf_token }}
+                            {{ formAdmin.hidden_tag() }}
+                            <p>
+                                <div class='mt-10'>
+                                    {{ formAdmin.returnUsernameAdmin(class_="single-input", placeholder="Username of Account") }}
+                                </div>
+                                {% for error in formAdmin.returnUsernameAdmin.errors %}
+                                    <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
+                                {% endfor %}
+                                <div class='mt-10'>
+                                    {{ formAdmin.returnButtonAdmin(class_="genric-btn primary radius") }}
+                                </div>
+                                {% if AdminMessageB %}
+                                    <div class='mt-10'><span style="color: red;">[{{ AdminMessageB }}]</span></div>
+                                {% endif %}
+                                {% if AdminMessageG %}
+                                    <div class='mt-10'><span style="color: blue;">[{{ AdminMessageG }}]</span></div>
+                                {% endif %}
+                            </p>
+                        </p>
+                        <p>
+                            <h4>Delete An Account:</h4>
+                            </p>
+                            <div>
+                            {{ formDelete.csrf_token }}
+                            {{ formDelete.hidden_tag() }}
+                            <p>
+                                <div class='mt-10'>
+                                    {{ formDelete.returnUsernameDelete(class_="single-input", placeholder="Username of Account") }}
+                                </div>
+                                {% for error in formDelete.returnUsernameDelete.errors %}
+                                    <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
+                                {% endfor %}
+                                <div class='mt-10'>
+                                    {{ formDelete.returnButtonDelete(class_="genric-btn primary radius") }}
+                                </div>
+                                {% if DeleteMessageB %}
+                                    <div class='mt-10'><span style="color: red;">[{{ DeleteMessageB }}]</span></div>
+                                {% endif %}
+                                {% if DeleteMessageG %}
+                                    <div class='mt-10'><span style="color: blue;">[{{ DeleteMessageG }}]</span></div>
+                                {% endif %}
+                            </p>
+                            <br>
+                        </p>
                     </div>
+
                 </form>
                             <a href="logout" class="genric-btn primary radius">Logout From Website</a>
                         </p>
                     </p>
+                    <!-- normal user dashboard -->
                     {% else %}
                         <p class="row align-items-center">
                         <p>
@@ -140,6 +193,7 @@
                         </p>
                         </p>
                     {% endif %}
+                <!-- no logged in user -->
                 {% else %}
                 <br>
                 <p class="row align-items-center">

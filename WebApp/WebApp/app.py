@@ -1,6 +1,6 @@
 from flask import Flask, render_template, abort, redirect, request
 from jinja2 import TemplateNotFound
-from WebApp.WebApp.forms import AddMenuItem, CreateAccount, FormLogin
+from WebApp.WebApp.forms import AddMenuItem, CreateAccount, FormLogin, UsernameReturnDelete, UsernameReturnAdmin
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, current_user, login_user, logout_user
 import pymysql
@@ -57,6 +57,8 @@ def createaccount_function():
         form_menu = AddMenuItem()
         form_login = FormLogin()
         form_create = CreateAccount()
+        form_delete = UsernameReturnDelete()
+        form_makeadmin = UsernameReturnAdmin()
 
         # if create button is pressed
         if form_create.createaccount.data:
@@ -75,15 +77,17 @@ def createaccount_function():
                     db.session.add(temp_user)
                     db.session.commit()
                     return redirect('myaccount')
-                    return redirect('myaccount')
                 # if user already exists, prompt user to either change username or login
                 else:
                     error = 'Account Already Exists: Choose Another Username or Login'
-                    return render_template('createaccount.html',  formMenu=form_menu, formLogin=form_login,
-                                           formCreate=form_create, createError=error)
+                    return render_template('createaccount.html', formMenu=form_menu, formLogin=form_login,
+                                           formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
+                                           createError=error)
 
         # what to return on no button press
-        return render_template('createaccount.html',  formMenu=form_menu, formLogin=form_login, formCreate=form_create)
+        return render_template('createaccount.html', formMenu=form_menu, formLogin=form_login,
+                               formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
+                               loginError=error)
 
     except TemplateNotFound:
         abort(404)
@@ -95,11 +99,17 @@ def myaccount_function():
     try:
 
         error = None
+        dmessagegood = None
+        dmessagebad = None
+        amessagegood = None
+        amessagebad = None
 
         # initialized forms needed
         form_menu = AddMenuItem()
         form_login = FormLogin()
         form_create = CreateAccount()
+        form_delete = UsernameReturnDelete()
+        form_makeadmin = UsernameReturnAdmin()
 
         # if login button is pressed
         if form_login.loginsubmit.data:
@@ -116,12 +126,13 @@ def myaccount_function():
                     user = users.query.filter_by(username=temp_username, password=temp_password).first()
                     login_user(user, remember=True)
                     return render_template('myaccount.html', formMenu=form_menu, formLogin=form_login,
-                                           formCreate=form_create)
+                                           formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin)
                 # if the combo doesn't exist in the DB, prompt user to create account if they don't have one
                 else:
                     error = 'Username or Password Incorrect: Create Account if you Don\'t Have One'
                     return render_template('myaccount.html', formMenu=form_menu, formLogin=form_login,
-                                           formCreate=form_create, loginError=error)
+                                           formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
+                                           loginError=error)
 
         if form_menu.addsubmit.data:
             form_menu = AddMenuItem(request.form)
@@ -132,8 +143,44 @@ def myaccount_function():
                 print(form_menu.choice.data)
                 return redirect('myaccount')
 
+        if form_delete.returnButtonDelete.data:
+            form_delete = UsernameReturnDelete(request.form)
+            if form_delete.validate_on_submit():
+                temp_user = form_delete.returnUsernameDelete.data
+                if db.session.query(users).filter(users.username == temp_user).count() == 0:
+                    dmessagebad = 'User Does Not Exists. Check Username and Enter Again'
+                    return render_template('myaccount.html', formMenu=form_menu, formLogin=form_login,
+                                        formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
+                                        DeleteMessageB=dmessagebad)
+                else:
+                    users.query.filter_by(username=temp_user).delete()
+                    db.session.commit()
+                    dmessagegood = 'User Has Been Deleted'
+                    return render_template('myaccount.html', formMenu=form_menu, formLogin=form_login,
+                                           formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
+                                           DeleteMessageG=dmessagegood)
+
+        if form_makeadmin.returnButtonAdmin.data:
+            form_makeadmin = UsernameReturnAdmin(request.form)
+            if form_makeadmin.validate_on_submit():
+                temp_user = form_makeadmin.returnUsernameAdmin.data
+                if db.session.query(users).filter(users.username == temp_user).count() == 0:
+                    amessagebad = 'User Does Not Exists. Check Username and Enter Again'
+                    return render_template('myaccount.html', formMenu=form_menu, formLogin=form_login,
+                                        formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
+                                        AdminMessageB=amessagebad)
+                else:
+                    temp = users.query.filter_by(username=temp_user).first()
+                    temp.typeaccount = 1
+                    db.session.commit()
+                    amessagegood = 'Account Has Been Made an Admin'
+                    return render_template('myaccount.html', formMenu=form_menu, formLogin=form_login,
+                                           formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
+                                           AdminMessageG=amessagegood)
+
         # on no special cases return myaccount page
-        return render_template('myaccount.html',  formMenu=form_menu, formLogin=form_login, formCreate=form_create)
+        return render_template('myaccount.html', formMenu=form_menu, formLogin=form_login,
+                               formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin)
 
     except TemplateNotFound:
         abort(404)
@@ -148,10 +195,12 @@ def html_lookup(page):
 
     # call myaccount functionality from function
     if page == 'myaccount':
+        print('hi')
         return myaccount_function()
 
     # call myaccount functionality from function
     if page == 'createaccount':
+        print('hello')
         return createaccount_function()
 
     # render all other pages that don't require extra procession in the form of a function

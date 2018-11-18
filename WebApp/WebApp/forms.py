@@ -29,3 +29,15 @@ class AddMenuItem(FlaskForm):
     price = DecimalField('Price', [validators.DataRequired()], places=2, rounding=None)
     choice = SelectField(label='Type of Item', choices=menu_choices)
     addsubmit = SubmitField('Add Item')
+
+
+# form for returning username for delete account
+class UsernameReturnDelete(FlaskForm):
+    returnUsernameDelete = StringField('Username', [validators.DataRequired()])
+    returnButtonDelete = SubmitField('Delete User')
+
+
+# form for returning username for make admin
+class UsernameReturnAdmin(FlaskForm):
+    returnUsernameAdmin = StringField('Username', [validators.DataRequired()])
+    returnButtonAdmin = SubmitField('Submit')
