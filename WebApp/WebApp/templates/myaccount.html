@@ -111,8 +111,8 @@
                                     </div>
                                 {% for error in formMenu.price.errors %}
                                  <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
-                            {% endfor %}
-                            <div class="input-group-icon mt-10">
+                                {% endfor %}
+                                <div class="input-group-icon mt-10">
                                 <div class="icon"><i class="fa fa-cutlery" aria-hidden="true"></i></div>
                                 <div class="form-select" id="default-select">
                                     {{ formMenu.choice }}
@@ -298,6 +298,47 @@
                             </p>
                         </p>
                         </form>
+                        <p>
+                        <h4>Order List:</h4>
+                        {% for OrderInformation in OrderList %}
+                            <p>
+                                Order Number: {{ OrderInformation[0] }}<br>
+                                {{ OrderInformation[1] }}<br>
+                                {{ OrderInformation[2] }}<br>
+                                {{ OrderInformation[3] }}<br>
+                                {{ OrderInformation[4] }}
+                            </p>
+                        {% endfor %}
+                        <form action="" method="post" novalidate>
+                        <p>
+                            <div>
+                            {{ formStatus.csrf_token }}
+                            {{ formStatus.hidden_tag() }}
+                            <p>
+                                <div class="input-group-icon mt-10">
+                                    <div class="icon"><i class="fa fa-hashtag" aria-hidden="true"></i></div>
+                                    {{ formStatus.orderNumber(class_="single-input", placeholder="Order Number")}}
+                                </div>
+                                <div class="input-group-icon mt-10">
+                                    <div class="icon"><i class="fa fa-th-list" aria-hidden="true"></i></div>
+                                    <div class="form-select" id="default-select">
+                                        {{ formStatus.orderStatus }}
+                                    </div>
+                                {% for error in formStatus.orderNumber.errors %}
+                                    <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
+                                {% endfor %}
+                                {% for error in formStatus.orderStatus.errors %}
+                                    <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
+                                {% endfor %}
+                                <div class='mt-10'>
+                                    {{ formStatus.statusButton(class_="genric-btn primary radius") }}
+                                </div>
+                                {% if StatusMessage %}
+                                    <div class='mt-10'><span style="color: red;">[{{ StatusMessage }}]</span></div>
+                                {% endif %}
+                            </p>
+                        </p>
+                        </form>
                     </div><br>
                             <a href="logout" class="genric-btn primary radius">Logout From Website</a>
                         </p>
@@ -339,9 +380,22 @@
                                     <div class='mt-10'><span style="color: blue;">[{{ BalanceMessageG }}]</span></div>
                                 {% endif %}
                             <br>
+                        </p>
+                        <p>
+                        <h4>Your Orders:</h4>
+                        {% for OrderInformation in OrderList %}
+                            {% if OrderInformation[1] == current_user.username %}
+                            <p>
+                                {{ OrderInformation[1] }}<br>
+                                {{ OrderInformation[2] }}<br>
+                                {{ OrderInformation[3] }}<br>
+                                {{ OrderInformation[4] }}
                             </p>
-                                <a href="logout" class="genric-btn primary radius">Logout From Website</a>
-                            </p>
+                            {% endif %}
+                        {% endfor %}
+                        </p>
+                        <a href="logout" class="genric-btn primary radius">Logout From Website</a>
+                        </p>
                         </p>
                         </p>
                         </p>

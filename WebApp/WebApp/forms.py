@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired, FileAllowed
-from wtforms import StringField, PasswordField, SubmitField, DecimalField, SelectField, validators
+from wtforms import StringField, PasswordField, SubmitField, DecimalField, SelectField, validators, IntegerField
 
 # choices for drop down menu on the add menu item form
 menu_choices = [('appetizer', 'Appetizer'), ('lunch', 'Lunch'), ('dinner', 'Dinner'), ('dessert', 'Dessert'), ('beverage', 'Beverage')]
@@ -8,6 +8,8 @@ menu_choices = [('appetizer', 'Appetizer'), ('lunch', 'Lunch'), ('dinner', 'Dinn
 gc_choices = [('5', 5), ('10', 10), ('15', 15), ('25', 25), ('50', 50), ('100', 100)]
 # choices for where to put the image on the gallery page
 gallery_choices = [('appetizer', 'Appetizer'), ('lunch', 'Lunch'), ('dinner', 'Dinner'), ('dessert', 'Dessert'), ('beverage', 'Beverage')]
+# choices for statuses on the orders
+status_choices = [('1', 'Created'), ('2', 'Started'), ('3', 'Completed'), ('4', 'Picked Up')]
 
 
 # form for creating account
@@ -77,3 +79,10 @@ class AddImage(FlaskForm):
 class RemoveImage(FlaskForm):
     imageName = StringField('Filename to Delete', [validators.DataRequired()])
     removeImageButton = SubmitField('Remove Image')
+
+
+# form for an admin to change the status of an order
+class StatusChange(FlaskForm):
+    orderNumber = IntegerField('Order Number', [validators.DataRequired()])
+    orderStatus = SelectField(label='Status', choices=status_choices)
+    statusButton = SubmitField('Change Status')
