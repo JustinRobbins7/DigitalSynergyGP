@@ -1,4 +1,5 @@
-from flask import Flask, render_template, abort, redirect, request, flash
+from flask import Flask, render_template, abort, redirect, request
+from werkzeug.security import generate_password_hash, check_password_hash
 from jinja2 import TemplateNotFound
 from WebApp.WebApp.forms import AddMenuItem, CreateAccount, FormLogin, UsernameReturnDelete, UsernameReturnAdmin, \
                                 GiftCardAddition, AddBalance, RemoveMenuItem, AddImage, RemoveImage, StatusChange
@@ -38,7 +39,7 @@ configure_uploads(app, imagesList)
 class Users(UserMixin, db.Model):
     id = db.Column('user_id', db.Integer, primary_key=True)
     username = db.Column(db.String(100))
-    password = db.Column(db.String(40))
+    password = db.Column(db.String(128))
     accountbalance = db.Column(db.DECIMAL(10, 2))
     # type account will be 0 for regular users and 1 for admin users
     typeaccount = db.Column(db.Integer)
@@ -91,7 +92,9 @@ db.create_all()
 
 # if there is no admin user in the database, this will create one. There should always be an admin account
 if db.session.query(Users).filter(Users.username == 'admin').count() == 0:
-    admin_user = Users(username='admin', password='password', accountbalance=0.0, typeaccount=1)
+    # hashes admin password
+    tempPassword = generate_password_hash('password')
+    admin_user = Users(username='admin', password=tempPassword, accountbalance=0.0, typeaccount=1)
     db.session.add(admin_user)
     db.session.commit()
 
@@ -166,7 +169,8 @@ def createaccount_function():
             # if data is all valid
             if form_create.validate_on_submit():
                 temp_username = form_create.createusername.data
-                temp_password = form_create.createpassword.data
+                #hashes password when sending to db
+                temp_password = generate_password_hash(form_create.createpassword.data)
 
                 # if user don't exist, create a temp user with all the data and add it to the users table in the DB,
                 # and then redirect to the myaccount page
@@ -260,11 +264,15 @@ def myaccount_function():
             if form_login.validate_on_submit():
                 temp_username = form_login.loginusername.data
                 temp_password = form_login.loginpassword.data
+                tempUser = Users.query.filter_by(username=temp_username).first()
+                #checks password hash
+                tempBool = check_password_hash(tempUser.password, temp_password)
 
                 # if the username and password combo is in the DB, then login the user using Flask-Login and then
                 # redirect to myaccount, which will now show a different page because user is logged in
-                if Users.query.filter_by(username=temp_username, password=temp_password).count() != 0:
-                    user = Users.query.filter_by(username=temp_username, password=temp_password).first()
+
+                if Users.query.filter_by(username=temp_username).count() != 0 and tempBool:
+                    user = Users.query.filter_by(username=temp_username).first()
                     login_user(user, remember=True)
                     return render_template('myaccount.html', formMenu=form_menu, formLogin=form_login,
                                            formCreate=form_create, formDelete=form_delete, formAdmin=form_makeadmin,
