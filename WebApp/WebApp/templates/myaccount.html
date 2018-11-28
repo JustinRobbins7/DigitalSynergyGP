@@ -372,7 +372,7 @@
                                 {{ formAddBalance.csrf_token }}
                                 {{ formAddBalance.hidden_tag() }}
                             <p>
-                                <div class='mt-10'>
+                                <div class='mt-10 half'>
                                     {{ formAddBalance.balanceNumber(class_="single-input", placeholder="Gift Card Number") }}
                                 </div>
                                 {% for error in formAddBalance.balanceNumber.errors %}
