@@ -264,14 +264,15 @@ def myaccount_function():
             if form_login.validate_on_submit():
                 temp_username = form_login.loginusername.data
                 temp_password = form_login.loginpassword.data
-                tempUser = Users.query.filter_by(username=temp_username).first()
-                #checks password hash
-                tempBool = check_password_hash(tempUser.password, temp_password)
+
+                if Users.query.filter_by(username=temp_username).count() != 0:
+                    tempuser = Users.query.filter_by(username=temp_username).first()
+                    # checks password hash
+                    tempbool = check_password_hash(tempuser.password, temp_password)
 
                 # if the username and password combo is in the DB, then login the user using Flask-Login and then
                 # redirect to myaccount, which will now show a different page because user is logged in
-
-                if Users.query.filter_by(username=temp_username).count() != 0 and tempBool:
+                if Users.query.filter_by(username=temp_username).count() != 0 and tempbool:
                     user = Users.query.filter_by(username=temp_username).first()
                     login_user(user, remember=True)
                     return render_template('myaccount.html', formMenu=form_menu, formLogin=form_login,

@@ -93,26 +93,26 @@
                             {{ formMenu.csrf_token }}
                             {{ formMenu.hidden_tag() }}
                             <p>
-                                <div class='mt-10 half'>
+                                <div class='mt-10'>
                                     {{ formMenu.title(class_="single-input", placeholder="Title") }}
                                 </div>
                                 {% for error in formMenu.title.errors %}
                                     <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
                                 {% endfor %}
-                                <div class='mt-10 half'>
+                                <div class='mt-10'>
                                     {{ formMenu.description(class_="single-input", placeholder="Description") }}
                                 </div>
                                 {% for error in formMenu.description.errors %}
                                     <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
                                 {% endfor %}
-                                <div class="input-group-icon mt-10 half">
+                                <div class="input-group-icon mt-10">
                                     <div class="icon"><i class="fa fa-usd" aria-hidden="true"></i></div>
                                         {{ formMenu.price(class_="single-input", placeholder="Price")}}
                                     </div>
                                 {% for error in formMenu.price.errors %}
                                  <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
                                 {% endfor %}
-                                <div class="input-group-icon mt-10 half">
+                                <div class="input-group-icon mt-10">
                                 <div class="icon"><i class="fa fa-cutlery" aria-hidden="true"></i></div>
                                 <div class="form-select" id="default-select">
                                     {{ formMenu.choice }}
@@ -121,7 +121,7 @@
                             {% for error in formMenu.choice.errors %}
                                  <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
                             {% endfor %}
-                            <div class='mt-10 half'>
+                            <div class='mt-10'>
                                 {{ formMenu.addsubmit(class_="genric-btn primary radius") }}
                             </div>
                             {% if MenuMessageB %}
@@ -138,13 +138,13 @@
                             {{ formRemoveItem.csrf_token }}
                             {{ formRemoveItem.hidden_tag() }}
                             <p>
-                                <div class='mt-10 half'>
+                                <div class='mt-10'>
                                     {{ formRemoveItem.removeItemTitle(class_="single-input", placeholder="Title of Item to Remove") }}
                                 </div>
                                 {% for error in formRemoveItem.removeItemTitle.errors %}
                                     <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
                                 {% endfor %}
-                                <div class='mt-10 half'>
+                                <div class='mt-10'>
                                     {{ formRemoveItem.removeItemButton(class_="genric-btn primary radius") }}
                                 </div>
                                 {% if RemoveMessageB %}
@@ -162,13 +162,13 @@
                             {{ formAdmin.csrf_token }}
                             {{ formAdmin.hidden_tag() }}
                             <p>
-                                <div class='mt-10 half'>
+                                <div class='mt-10'>
                                     {{ formAdmin.returnUsernameAdmin(class_="single-input", placeholder="Username of Account") }}
                                 </div>
                                 {% for error in formAdmin.returnUsernameAdmin.errors %}
                                     <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
                                 {% endfor %}
-                                <div class='mt-10 half'>
+                                <div class='mt-10'>
                                     {{ formAdmin.returnButtonAdmin(class_="genric-btn primary radius") }}
                                 </div>
                                 {% if AdminMessageB %}
@@ -186,13 +186,13 @@
                             {{ formDelete.csrf_token }}
                             {{ formDelete.hidden_tag() }}
                             <p>
-                                <div class='mt-10 half'>
+                                <div class='mt-10'>
                                     {{ formDelete.returnUsernameDelete(class_="single-input", placeholder="Username of Account") }}
                                 </div>
                                 {% for error in formDelete.returnUsernameDelete.errors %}
                                     <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
                                 {% endfor %}
-                                <div class='mt-10 half'>
+                                <div class='mt-10'>
                                     {{ formDelete.returnButtonDelete(class_="genric-btn primary radius") }}
                                 </div>
                                 {% if DeleteMessageB %}
@@ -210,13 +210,13 @@
                             {{ formAddGiftcard.csrf_token }}
                             {{ formAddGiftcard.hidden_tag() }}
                             <p>
-                                <div class='mt-10 half'>
+                                <div class='mt-10'>
                                     {{ formAddGiftcard.giftCardNumber(class_="single-input", placeholder="Gift Card Number") }}
                                 </div>
                                 {% for error in formAddGiftcard.giftCardNumber.errors %}
                                     <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
                                 {% endfor %}
-                                <div class="input-group-icon mt-10 half">
+                                <div class="input-group-icon mt-10">
                                     <div class="icon"><i class="fa fa-usd" aria-hidden="true"></i></div>
                                     <div class="form-select" id="default-select">
                                         {{ formAddGiftcard.giftCardAmount }}
@@ -225,7 +225,7 @@
                                 {% for error in formAddGiftcard.giftCardAmount.errors %}
                                     <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
                                 {% endfor %}
-                                <div class='mt-10 half'>
+                                <div class='mt-10'>
                                     {{ formAddGiftcard.addGiftCard(class_="genric-btn primary radius") }}
                                 </div>
                                 {% if AddMessageB %}
@@ -245,13 +245,13 @@
                             {{ formAddImage.csrf_token }}
                             {{ formAddImage.hidden_tag() }}
                             <p>
-                                <div class='mt-10 half'>
+                                <div class='mt-10'>
                                     {{ formAddImage.galleryImage(class_="") }}
                                 </div>
                                 {% for error in formAddImage.galleryImage.errors %}
                                     <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
                                 {% endfor %}
-                                <div class="input-group-icon mt-10 half">
+                                <div class="input-group-icon mt-10">
                                     <div class="icon"><i class="fa fa-cutlery" aria-hidden="true"></i></div>
                                     <div class="form-select" id="default-select">
                                         {{ formAddImage.galleryLocation }}
@@ -280,13 +280,13 @@
                             {{ formRemoveImage.csrf_token }}
                             {{ formRemoveImage.hidden_tag() }}
                             <p>
-                                <div class='mt-10 half'>
+                                <div class='mt-10'>
                                     {{ formRemoveImage.imageName(class_="single-input", placeholder="File Name to Remove") }}
                                 </div>
                                 {% for error in formRemoveImage.imageName.errors %}
                                     <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
                                 {% endfor %}
-                                <div class='mt-10 half'>
+                                <div class='mt-10'>
                                     {{ formRemoveImage.removeImageButton(class_="genric-btn primary radius") }}
                                 </div>
                                 {% if RImageMessageB %}
@@ -323,11 +323,11 @@
                             {{ formStatus.csrf_token }}
                             {{ formStatus.hidden_tag() }}
                             <p>
-                                <div class="input-group-icon mt-10 half">
+                                <div class="input-group-icon mt-10">
                                     <div class="icon"><i class="fa fa-hashtag" aria-hidden="true"></i></div>
                                     {{ formStatus.orderNumber(class_="single-input", placeholder="Order Number")}}
                                 </div>
-                                <div class="input-group-icon mt-10 half">
+                                <div class="input-group-icon mt-10">
                                     <div class="icon"><i class="fa fa-th-list" aria-hidden="true"></i></div>
                                     <div class="form-select" id="default-select">
                                         {{ formStatus.orderStatus }}
@@ -338,7 +338,7 @@
                                 {% for error in formStatus.orderStatus.errors %}
                                     <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
                                 {% endfor %}
-                                <div class='mt-10 half'>
+                                <div class='mt-10'>
                                     {{ formStatus.statusButton(class_="genric-btn primary radius") }}
                                 </div>
                                 {% if StatusMessage %}
@@ -372,7 +372,7 @@
                                 {{ formAddBalance.csrf_token }}
                                 {{ formAddBalance.hidden_tag() }}
                             <p>
-                                <div class='mt-10 half'>
+                                <div class='mt-10'>
                                     {{ formAddBalance.balanceNumber(class_="single-input", placeholder="Gift Card Number") }}
                                 </div>
                                 {% for error in formAddBalance.balanceNumber.errors %}
@@ -510,14 +510,6 @@
 
 						</div>					
 					</div>					
-				</div>
-				<div class="footer-bottom-wrap">
-					<div class="container">
-						<div class="row footer-bottom d-flex justify-content-between align-items-center">
-							<p class="col-lg-8 col-mdcol-sm-6 -6 footer-text m-0"><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-						</div>						
-					</div>
 				</div>
 			</footer>
 			<!-- End footer Area -->	
