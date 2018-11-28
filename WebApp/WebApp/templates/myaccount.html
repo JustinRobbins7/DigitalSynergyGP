@@ -93,26 +93,26 @@
                             {{ formMenu.csrf_token }}
                             {{ formMenu.hidden_tag() }}
                             <p>
-                                <div class='mt-10'>
+                                <div class='mt-10 half'>
                                     {{ formMenu.title(class_="single-input", placeholder="Title") }}
                                 </div>
                                 {% for error in formMenu.title.errors %}
                                     <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
                                 {% endfor %}
-                                <div class='mt-10'>
+                                <div class='mt-10 half'>
                                     {{ formMenu.description(class_="single-input", placeholder="Description") }}
                                 </div>
                                 {% for error in formMenu.description.errors %}
                                     <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
                                 {% endfor %}
-                                <div class="input-group-icon mt-10">
+                                <div class="input-group-icon mt-10 half">
                                     <div class="icon"><i class="fa fa-usd" aria-hidden="true"></i></div>
                                         {{ formMenu.price(class_="single-input", placeholder="Price")}}
                                     </div>
                                 {% for error in formMenu.price.errors %}
                                  <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
                                 {% endfor %}
-                                <div class="input-group-icon mt-10">
+                                <div class="input-group-icon mt-10 half">
                                 <div class="icon"><i class="fa fa-cutlery" aria-hidden="true"></i></div>
                                 <div class="form-select" id="default-select">
                                     {{ formMenu.choice }}
@@ -121,7 +121,7 @@
                             {% for error in formMenu.choice.errors %}
                                  <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
                             {% endfor %}
-                            <div class='mt-10'>
+                            <div class='mt-10 half'>
                                 {{ formMenu.addsubmit(class_="genric-btn primary radius") }}
                             </div>
                             {% if MenuMessageB %}
@@ -138,13 +138,13 @@
                             {{ formRemoveItem.csrf_token }}
                             {{ formRemoveItem.hidden_tag() }}
                             <p>
-                                <div class='mt-10'>
+                                <div class='mt-10 half'>
                                     {{ formRemoveItem.removeItemTitle(class_="single-input", placeholder="Title of Item to Remove") }}
                                 </div>
                                 {% for error in formRemoveItem.removeItemTitle.errors %}
                                     <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
                                 {% endfor %}
-                                <div class='mt-10'>
+                                <div class='mt-10 half'>
                                     {{ formRemoveItem.removeItemButton(class_="genric-btn primary radius") }}
                                 </div>
                                 {% if RemoveMessageB %}
@@ -162,13 +162,13 @@
                             {{ formAdmin.csrf_token }}
                             {{ formAdmin.hidden_tag() }}
                             <p>
-                                <div class='mt-10'>
+                                <div class='mt-10 half'>
                                     {{ formAdmin.returnUsernameAdmin(class_="single-input", placeholder="Username of Account") }}
                                 </div>
                                 {% for error in formAdmin.returnUsernameAdmin.errors %}
                                     <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
                                 {% endfor %}
-                                <div class='mt-10'>
+                                <div class='mt-10 half'>
                                     {{ formAdmin.returnButtonAdmin(class_="genric-btn primary radius") }}
                                 </div>
                                 {% if AdminMessageB %}
@@ -186,13 +186,13 @@
                             {{ formDelete.csrf_token }}
                             {{ formDelete.hidden_tag() }}
                             <p>
-                                <div class='mt-10'>
+                                <div class='mt-10 half'>
                                     {{ formDelete.returnUsernameDelete(class_="single-input", placeholder="Username of Account") }}
                                 </div>
                                 {% for error in formDelete.returnUsernameDelete.errors %}
                                     <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
                                 {% endfor %}
-                                <div class='mt-10'>
+                                <div class='mt-10 half'>
                                     {{ formDelete.returnButtonDelete(class_="genric-btn primary radius") }}
                                 </div>
                                 {% if DeleteMessageB %}
@@ -210,13 +210,13 @@
                             {{ formAddGiftcard.csrf_token }}
                             {{ formAddGiftcard.hidden_tag() }}
                             <p>
-                                <div class='mt-10'>
+                                <div class='mt-10 half'>
                                     {{ formAddGiftcard.giftCardNumber(class_="single-input", placeholder="Gift Card Number") }}
                                 </div>
                                 {% for error in formAddGiftcard.giftCardNumber.errors %}
                                     <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
                                 {% endfor %}
-                                <div class="input-group-icon mt-10">
+                                <div class="input-group-icon mt-10 half">
                                     <div class="icon"><i class="fa fa-usd" aria-hidden="true"></i></div>
                                     <div class="form-select" id="default-select">
                                         {{ formAddGiftcard.giftCardAmount }}
@@ -225,7 +225,7 @@
                                 {% for error in formAddGiftcard.giftCardAmount.errors %}
                                     <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
                                 {% endfor %}
-                                <div class='mt-10'>
+                                <div class='mt-10 half'>
                                     {{ formAddGiftcard.addGiftCard(class_="genric-btn primary radius") }}
                                 </div>
                                 {% if AddMessageB %}
@@ -245,13 +245,13 @@
                             {{ formAddImage.csrf_token }}
                             {{ formAddImage.hidden_tag() }}
                             <p>
-                                <div class='mt-10'>
+                                <div class='mt-10 half'>
                                     {{ formAddImage.galleryImage(class_="") }}
                                 </div>
                                 {% for error in formAddImage.galleryImage.errors %}
                                     <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
                                 {% endfor %}
-                                <div class="input-group-icon mt-10">
+                                <div class="input-group-icon mt-10 half">
                                     <div class="icon"><i class="fa fa-cutlery" aria-hidden="true"></i></div>
                                     <div class="form-select" id="default-select">
                                         {{ formAddImage.galleryLocation }}
@@ -260,7 +260,7 @@
                                 {% for error in formAddImage.galleryLocation.errors %}
                                     <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
                                 {% endfor %}
-                                <div class='mt-10'>
+                                <div class='mt-10 half'>
                                     {{ formAddImage.galleryButton(class_="genric-btn primary radius") }}
                                 </div>
                                 {% if ImageMessageB %}
@@ -280,13 +280,13 @@
                             {{ formRemoveImage.csrf_token }}
                             {{ formRemoveImage.hidden_tag() }}
                             <p>
-                                <div class='mt-10'>
+                                <div class='mt-10 half'>
                                     {{ formRemoveImage.imageName(class_="single-input", placeholder="File Name to Remove") }}
                                 </div>
                                 {% for error in formRemoveImage.imageName.errors %}
                                     <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
                                 {% endfor %}
-                                <div class='mt-10'>
+                                <div class='mt-10 half'>
                                     {{ formRemoveImage.removeImageButton(class_="genric-btn primary radius") }}
                                 </div>
                                 {% if RImageMessageB %}
@@ -299,14 +299,22 @@
                         </p>
                         </form>
                         <p>
-                        <h4>Order List:</h4>
+                        <h4>Order List:</h4><br>
                         {% for OrderInformation in OrderList %}
                             <p>
-                                Order Number: {{ OrderInformation[0] }}<br>
-                                {{ OrderInformation[1] }}<br>
-                                {{ OrderInformation[2] }}<br>
-                                {{ OrderInformation[3] }}<br>
-                                {{ OrderInformation[4] }}
+                                <h5>Order Number: {{ OrderInformation[0] }}</h5><br>
+                                <div class="boxed half">
+                                <b>Username:</b> {{ OrderInformation[1] }}<br>
+                                <b>Order Information:</b> {{ OrderInformation[2] }}<br>
+                                <b>Order Status:</b>
+                                    {% if OrderInformation[4] == 1 %}
+                                        Not Started
+                                    {% elif OrderInformation[4] == 2 %}
+                                        In Progress
+                                    {% elif OrderInformation[4] == 3 %}
+                                        Ready for Pickup
+                                    {% endif %}
+                                </div>
                             </p>
                         {% endfor %}
                         <form action="" method="post" novalidate>
@@ -315,11 +323,11 @@
                             {{ formStatus.csrf_token }}
                             {{ formStatus.hidden_tag() }}
                             <p>
-                                <div class="input-group-icon mt-10">
+                                <div class="input-group-icon mt-10 half">
                                     <div class="icon"><i class="fa fa-hashtag" aria-hidden="true"></i></div>
                                     {{ formStatus.orderNumber(class_="single-input", placeholder="Order Number")}}
                                 </div>
-                                <div class="input-group-icon mt-10">
+                                <div class="input-group-icon mt-10 half">
                                     <div class="icon"><i class="fa fa-th-list" aria-hidden="true"></i></div>
                                     <div class="form-select" id="default-select">
                                         {{ formStatus.orderStatus }}
@@ -330,7 +338,7 @@
                                 {% for error in formStatus.orderStatus.errors %}
                                     <div class='mt-10'><span style="color: red;">[{{ error }}]</span></div>
                                 {% endfor %}
-                                <div class='mt-10'>
+                                <div class='mt-10 half'>
                                     {{ formStatus.statusButton(class_="genric-btn primary radius") }}
                                 </div>
                                 {% if StatusMessage %}
@@ -382,18 +390,44 @@
                             <br>
                         </p>
                         <p>
-                        <h4>Your Orders:</h4>
+                        <h4>Shopping Cart:</h4>
+                        {% if CartList|length == 0%}
+                            <br>Add Something to Your Cart!
+                        {% endif %}
+                        {% for CartItem in CartList %}
+                            <p>
+                                <li>{{ CartItem.itemtitle }}, {{ CartItem.itemprice }}</li>
+                            </p>
+                        {% endfor %}
+                        {% if CartList|length != 0%}
+                            <b>Total Price = ${{ CartPrice }}</b>
+                        {% endif %}
+                        </p>
+                        <a href="placeorder" class="genric-btn primary radius">Place Order</a>
+                        <p>
+                        <h4>Your Orders:</h4><br>
+                        {% if OrderList|length == 0%}
+                            You Have No Orders!
+                        {% endif %}
                         {% for OrderInformation in OrderList %}
                             {% if OrderInformation[1] == current_user.username %}
                             <p>
-                                {{ OrderInformation[1] }}<br>
-                                {{ OrderInformation[2] }}<br>
-                                {{ OrderInformation[3] }}<br>
-                                {{ OrderInformation[4] }}
+                                <div class="boxed half">
+                                    <b>Order Contents:</b> {{ OrderInformation[2] }}<br>
+                                    <b>Order Status:</b>
+                                    {% if OrderInformation[4] == 1 %}
+                                        Not Started
+                                    {% elif OrderInformation[4] == 2 %}
+                                        In Progress
+                                    {% elif OrderInformation[4] == 3 %}
+                                        Ready for Pickup
+                                    {% endif %}
+                                </div>
                             </p>
                             {% endif %}
                         {% endfor %}
                         </p>
+                        <br>
                         <a href="logout" class="genric-btn primary radius">Logout From Website</a>
                         </p>
                         </p>
@@ -503,4 +537,16 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 			<script src="static/js/mail-script.js"></script>
 			<script src="static/js/main.js"></script>
 		</body>
+
+    <style>
+        .boxed {
+            border: 1px solid black ;
+            width: 6in;
+        }
+        .half {
+            word-wrap: break-word;
+            width: 6in;
+        }
+    </style>
+
 	</html>

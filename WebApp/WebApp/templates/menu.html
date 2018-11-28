@@ -81,6 +81,13 @@
 								<h1 class="mb-10">Enjoy our full selection of items</h1>
 								<p>Whether you're looking for something to share or something for yourself, enjoy our full selection of items and decide what you would like to order!</p>
 								<p>Click an item to add it to your order!</p>
+                                {% with messages = get_flashed_messages() %}
+                                    {% if messages %}
+                                        {% for message in messages %}
+                                            <h4><div class='mt-10'><span style="color: blue;">[{{ message }}]</span></div></h4>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endwith %}
 							</div>
 						</div>
 					</div>	
@@ -100,7 +107,15 @@
                         <div class="col-md-6 all appetizer">
                             <div class="single-menu">
                                 <div class="title-wrap d-flex justify-content-between">
-                                    <h4>{{ MenuItems[1] }}</h4>
+                                    {% if current_user.is_authenticated %}
+                                        {% if current_user.typeaccount == 0 %}
+                                            <a href="{{ url_for('add', code=MenuItems[1]) }}"><h4>{{ MenuItems[1] }}</h4></a>
+                                        {% else %}
+                                            <h4>{{ MenuItems[1] }}</h4>
+                                        {% endif %}
+                                    {% else %}
+                                        <h4>{{ MenuItems[1] }}</h4>
+                                    {% endif %}
                                     <h4 class="price">${{ MenuItems[3] }}</h4>
                                 </div>
                                 <p>
@@ -112,7 +127,7 @@
                             <div class="col-md-6 all lunch">
 								<div class="single-menu">
 									<div class="title-wrap d-flex justify-content-between">
-										<h4>{{ MenuItems[1] }}</h4>
+										<a href="{{ url_for('add', code=MenuItems[1]) }}"><h4>{{ MenuItems[1] }}</h4></a>
 										<h4 class="price">${{ MenuItems[3] }}</h4>
 									</div>
 									<p>
@@ -124,7 +139,7 @@
                             <div class="col-md-6 all dinner">
 								<div class="single-menu">
 									<div class="title-wrap d-flex justify-content-between">
-										<h4>{{ MenuItems[1] }}</h4>
+										<a href="{{ url_for('add', code=MenuItems[1]) }}"><h4>{{ MenuItems[1] }}</h4></a>
 										<h4 class="price">${{ MenuItems[3] }}</h4>
 									</div>
 									<p>
@@ -136,7 +151,7 @@
                             <div class="col-md-6 all dessert">
 								<div class="single-menu">
 									<div class="title-wrap d-flex justify-content-between">
-										<h4>{{ MenuItems[1] }}</h4>
+										<a href="{{ url_for('add', code=MenuItems[1]) }}"><h4>{{ MenuItems[1] }}</h4></a>
 										<h4 class="price">${{ MenuItems[3] }}</h4>
 									</div>
 									<p>
@@ -148,7 +163,7 @@
                             <div class="col-md-6 all beverages">
 								<div class="single-menu">
 									<div class="title-wrap d-flex justify-content-between">
-										<h4>{{ MenuItems[1] }}</h4>
+                                        <a href="{{ url_for('add', code=MenuItems[1]) }}"><h4>{{ MenuItems[1] }}</h4></a>
 										<h4 class="price">${{ MenuItems[3] }}</h4>
 									</div>
 									<p>
