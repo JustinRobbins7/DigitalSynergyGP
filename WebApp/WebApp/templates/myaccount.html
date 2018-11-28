@@ -404,6 +404,13 @@
                         {% endif %}
                         </p>
                         <a href="placeorder" class="genric-btn primary radius">Place Order</a>
+                        {% with messages = get_flashed_messages() %}
+                                    {% if messages %}
+                                        {% for message in messages %}
+                                            <h6><div class='mt-10'><span style="color: blue;">{{ message }}</span></div></h6>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endwith %}
                         <p>
                         <h4>Your Orders:</h4><br>
                         {% if OrderList|length == 0%}

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, abort, redirect, request
+from flask import Flask, render_template, abort, redirect, request, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from jinja2 import TemplateNotFound
 from WebApp.WebApp.forms import AddMenuItem, CreateAccount, FormLogin, UsernameReturnDelete, UsernameReturnAdmin, \
@@ -143,7 +143,13 @@ def place_order():
 
     orderinfo = OrderInformation(orderauthor=current_user.username, orderinfo=temporder, orderstatus=1)
     db.session.add(orderinfo)
-    current_user.accountbalance -= tempprice
+
+    if current_user.accountbalance - tempprice < 0:
+        flash('Not Enough Balance! Add Funds or Remove Items.')
+        return redirect('myaccount')
+    else:
+        current_user.accountbalance -= tempprice
+
     db.session.commit()
 
     shoppingcart = []
