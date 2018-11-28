@@ -1,4 +1,5 @@
 from flask import Flask, render_template, abort, redirect, request
+from werkzeug.security import generate_password_hash
 from jinja2 import TemplateNotFound
 from WebApp.WebApp.forms import AddMenuItem, CreateAccount, FormLogin, UsernameReturnDelete, UsernameReturnAdmin, \
                                 GiftCardAddition, AddBalance, RemoveMenuItem, AddImage, RemoveImage, StatusChange
