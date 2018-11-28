@@ -93,7 +93,9 @@ db.create_all()
 
 # if there is no admin user in the database, this will create one. There should always be an admin account
 if db.session.query(Users).filter(Users.username == 'admin').count() == 0:
-    admin_user = Users(username='admin', password='password', accountbalance=0.0, typeaccount=1)
+    # hashes admin password
+    tempPassword = generate_password_hash('password')
+    admin_user = Users(username='admin', password=tempPassword, accountbalance=0.0, typeaccount=1)
     db.session.add(admin_user)
     db.session.commit()
 
